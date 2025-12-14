@@ -25,7 +25,6 @@
             --text-main: #ffffff;
             --text-muted: #aaaaaa;
             --danger: #ff3333;
-            --warning: #ffaa00;
             --font: 'Tajawal', sans-serif;
             --gradient: linear-gradient(135deg, var(--secondary), var(--primary));
         }
@@ -41,8 +40,6 @@
         .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
         .input-box { width: 100%; padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-family: var(--font); margin-bottom: 10px; }
         
-        /* Animations */
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -51,17 +48,16 @@
         .balance-usd { font-size: 3rem; font-weight: 900; letter-spacing: -1px; }
         .points-tag { background: rgba(0,0,0,0.4); padding: 6px 15px; border-radius: 20px; font-size: 0.9rem; color: var(--primary); display: inline-flex; align-items: center; gap: 5px; margin-top: 5px; }
         
-        /* Grid & Tasks */
         .earn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
         .earn-card { text-align: center; padding: 20px; transition: 0.3s; cursor: pointer; }
         .earn-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
         .task-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 15px; border-radius: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
         .task-btn { background: var(--secondary); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
 
-        /* Game Overlay */
+        /* FIXED GAME OVERLAY */
         #game-overlay { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; }
-        #game-header { padding: 15px; background: #111; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        #game-timer { background: var(--primary); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
+        #game-header { padding: 15px; background: #111; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; height: 60px; }
+        #game-timer { background: var(--primary); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 1.1rem; }
         #game-frame { flex: 1; border: none; width: 100%; background: #fff; }
 
         /* Wheel Overlay */
@@ -75,53 +71,17 @@
         .msg-me { align-self: flex-end; background: var(--gradient); color: white; margin-right: 0; margin-left: auto; }
         .msg-admin { align-self: flex-start; background: #333; color: white; margin-left: 0; margin-right: auto; }
 
-        /* Popups & Notifications */
+        /* Popups */
         #flash-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 20000; display: flex; justify-content: center; align-items: center; }
         .broadcast-msg { position: fixed; left: 20px; right: 20px; background: rgba(20,20,20,0.95); border: 1px solid var(--primary); padding: 15px; border-radius: 10px; z-index: 9000; text-align: center; color: white; animation: popIn 0.5s; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         .bc-top { top: 20px; } .bc-bottom { bottom: 90px; } .bc-center { top: 50%; transform: translateY(-50%); }
         @keyframes popIn { from{transform:translateY(-20px);opacity:0} to{transform:translateY(0);opacity:1} }
 
-        /* Leaderboard Items */
-        .leader-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .leader-item:first-child { color: gold; font-weight: bold; }
-        .leader-item:nth-child(2) { color: silver; }
-        .leader-item:nth-child(3) { color: #cd7f32; }
-
-        /* NEW: Level Progress Bar */
+        /* Level Progress Bar */
         .level-container { margin-top: 20px; text-align: right; }
         .level-bar-bg { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 5px; }
         .level-bar-fill { height: 100%; background: var(--gradient); width: 0%; transition: 1s; }
         .level-badge { background: var(--secondary); padding: 2px 10px; border-radius: 10px; font-size: 0.7rem; color: white; }
-
-        /* ============================
-           NEW: ADVANCED WITHDRAWAL HISTORY
-           ============================ */
-        .history-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .h-item { 
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid rgba(255,255,255,0.05); 
-            border-radius: 16px; 
-            padding: 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            transition: 0.3s;
-        }
-        .h-item:hover { transform: translateX(-5px); background: rgba(255,255,255,0.05); }
-        .h-left h4 { font-size: 1rem; color: white; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
-        .h-left span { font-size: 0.75rem; color: #aaa; display: block; }
-        .h-right { text-align: left; }
-        .h-amount { font-size: 1.1rem; font-weight: bold; color: white; letter-spacing: 0.5px; }
-        
-        /* Status Badges */
-        .st-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; margin-top: 5px; display: inline-flex; align-items: center; gap: 4px; font-weight: bold; }
-        
-        /* Pending Style */
-        .st-pending { background: rgba(255, 170, 0, 0.15); color: var(--warning); border: 1px solid rgba(255, 170, 0, 0.3); }
-        /* Approved Style */
-        .st-approved { background: rgba(0, 255, 136, 0.15); color: var(--primary); border: 1px solid rgba(0, 255, 136, 0.3); box-shadow: 0 0 10px rgba(0, 255, 136, 0.1); }
-        /* Rejected Style */
-        .st-rejected { background: rgba(255, 51, 51, 0.15); color: var(--danger); border: 1px solid rgba(255, 51, 51, 0.3); }
 
         /* Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
@@ -187,6 +147,7 @@
                 </div>
             </div>
 
+            <!-- Notifications -->
             <div id="private-notifs" style="padding:0 20px;"></div>
             <div id="broadcast-area"></div>
 
@@ -241,23 +202,19 @@
             <div id="tasks-list"><p style="text-align:center; color:#aaa;">جاري التحميل...</p></div>
         </section>
 
-        <!-- WITHDRAW & HISTORY (UPDATED) -->
+        <!-- WITHDRAW -->
         <section id="withdraw-page" class="hidden fade-in" style="padding:20px;">
-            <h2 style="margin-bottom:20px;">سحب الأرباح</h2>
+            <h2 style="margin-bottom:20px;">السحب</h2>
             <div class="glass-card">
                 <select id="w-method" class="input-box" style="background:#222;"><option>loading...</option></select>
-                <input type="number" id="w-amount" class="input-box" placeholder="المبلغ ($)">
-                <input type="text" id="w-addr" class="input-box" placeholder="رقم المحفظة / العنوان">
-                <button onclick="withdraw()" class="btn btn-primary">طلب سحب</button>
+                <input type="number" id="w-amount" class="input-box" placeholder="المبلغ">
+                <input type="text" id="w-addr" class="input-box" placeholder="العنوان">
+                <button onclick="withdraw()" class="btn btn-primary">سحب</button>
             </div>
-            
-            <h4 style="margin-top:30px; margin-bottom:15px; color:var(--text-muted);">سجل العمليات (History)</h4>
-            <div id="w-history" class="history-list">
-                <!-- Items will be injected here with New Design -->
-            </div>
+            <div id="w-history"></div>
         </section>
 
-        <!-- SUPPORT PAGE -->
+        <!-- SUPPORT -->
         <section id="support-page" class="hidden fade-in" style="padding:20px;">
             <h2 style="margin-bottom:20px;">الدعم الفني</h2>
             <div id="chat-box" class="glass-card" style="height:60vh; overflow-y:auto; display:flex; flex-direction:column; gap:10px;"></div>
@@ -270,13 +227,12 @@
         <!-- PROFILE -->
         <section id="profile-page" class="hidden fade-in" style="padding:20px; text-align:center;">
             <img id="p-avatar" class="avatar-img" style="width:100px; height:100px; margin:0 auto 15px;" src="">
-            <h2 id="p-name-2" style="display:flex; align-items:center; justify-content:center; gap:5px;">User</h2>
+            <h2 id="p-name-2">User</h2>
             
             <div style="margin:5px auto; display:inline-block; background:rgba(255,255,255,0.1); padding:5px 15px; border-radius:20px; font-size:0.8rem;">
                 <span id="p-country">🌍 Global</span>
             </div>
 
-            <!-- Level System -->
             <div class="glass-card level-container">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span id="lvl-name" class="level-badge">مبتدئ</span>
@@ -303,13 +259,15 @@
 
     </div>
 
-    <!-- GAME OVERLAY -->
+    <!-- GAME OVERLAY (FIXED: Supports both HTML and Links) -->
     <div id="game-overlay" class="hidden">
         <div id="game-header">
             <span id="game-timer">00:00</span>
             <button onclick="closeGame()" style="background:var(--danger); border:none; color:white; padding:5px 10px; border-radius:5px;">إلغاء</button>
         </div>
+        <!-- Using Iframe for everything to keep timer visible -->
         <iframe id="game-frame"></iframe>
+        
         <div id="claim-area" class="hidden" style="position:absolute; bottom:50px; width:100%; text-align:center;">
             <button onclick="claimReward()" class="btn btn-primary" style="width:80%;">استلام المكافأة</button>
         </div>
@@ -357,7 +315,6 @@
         let activeTask = null;
         let timerInt = null;
 
-        // Init
         auth.onAuthStateChanged(u => {
             if(u) {
                 currentUser = u;
@@ -370,7 +327,6 @@
             }
         });
 
-        // Auth
         function toggleAuth() {
             isLogin = !isLogin;
             document.getElementById('reg-name').classList.toggle('hidden', isLogin);
@@ -397,24 +353,17 @@
         }
 
         function initApp() {
-            // Listen to Settings
             db.ref('settings').on('value', s => {
                 settings = s.val() || {};
                 if(settings.maintenance) document.getElementById('maint-screen').classList.remove('hidden');
                 else document.getElementById('maint-screen').classList.add('hidden');
                 document.getElementById('rate-disp').textContent = settings.exchangeRate || 1000;
-                if(settings.flashEvent?.active && !sessionStorage.getItem('flashSeen')) {
-                    document.getElementById('flash-img-src').src = settings.flashEvent.image;
-                    document.getElementById('flash-popup').classList.remove('hidden');
-                    sessionStorage.setItem('flashSeen', 'true');
-                }
                 if(settings.leaderboard) {
                     document.getElementById('leaderboard-sec').classList.remove('hidden');
                     loadLeaderboard();
                 } else document.getElementById('leaderboard-sec').classList.add('hidden');
             });
 
-            // User Data
             db.ref('users/'+currentUser.uid).on('value', s => {
                 userData = s.val();
                 if(userData.isBanned) { document.getElementById('ban-screen').classList.remove('hidden'); return; }
@@ -426,7 +375,6 @@
                 document.getElementById('p-email-2').textContent = userData.email;
                 document.getElementById('u-usd').textContent = userData.balance.toFixed(2);
                 document.getElementById('u-pts').textContent = userData.points;
-                document.getElementById('p-country').textContent = userData.country || "🌍 Global";
                 document.getElementById('ref-code').textContent = userData.refCode || "---";
                 document.getElementById('u-avatar-small').src = userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username}`;
                 document.getElementById('p-avatar').src = userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username}`;
@@ -434,7 +382,6 @@
                 updateLevel(userData.points);
             });
 
-            // Alerts & Notifications
             db.ref('system_alerts').limitToLast(1).on('child_added', s => {
                 const a = s.val();
                 if(Date.now() - a.timestamp < 10000) { 
@@ -446,61 +393,21 @@
                     setTimeout(() => div.remove(), (a.duration || 5) * 1000);
                 }
             });
-            db.ref('users/'+currentUser.uid+'/notifications').on('child_added', s => {
-                const n = s.val();
-                const div = document.createElement('div');
-                div.className = 'glass-card';
-                div.style.border = '1px solid var(--secondary)';
-                div.innerHTML = `🔔 <b>تنبيه خاص:</b> ${n.msg}`;
-                document.getElementById('private-notifs').prepend(div);
-            });
-            
-            // Payments
+
             db.ref('payment_methods').on('value', s => {
                 const sel = document.getElementById('w-method');
                 sel.innerHTML = '';
                 s.forEach(c => sel.innerHTML += `<option value="${c.val().name}">${c.val().name}</option>`);
             });
 
-            // --- HISTORY (UPDATED WITH DESIGN) ---
             db.ref('withdrawals').orderByChild('userId').equalTo(currentUser.uid).on('value', s => {
                 const d = document.getElementById('w-history');
                 d.innerHTML = '';
-                // Reverse to show newest first
-                let arr = [];
-                s.forEach(c => arr.push(c.val()));
-                
-                if(arr.length === 0) {
-                    d.innerHTML = '<p style="text-align:center; color:#555;">لا يوجد عمليات سابقة</p>';
-                    return;
-                }
-
-                arr.reverse().forEach(w => {
-                    // Determine styling based on status
-                    let stClass = 'st-pending';
-                    let stText = 'قيد المعالجة ⏳';
-                    
-                    if(w.status === 'approved') {
-                        stClass = 'st-approved';
-                        stText = 'تم الدفع ✅';
-                    } else if (w.status === 'rejected') {
-                        stClass = 'st-rejected';
-                        stText = 'مرفوض ❌';
-                    }
-
-                    // Format Date (Simple)
-                    let dateStr = "اليوم";
-                    
-                    d.innerHTML += `
-                    <div class="h-item fade-in">
-                        <div class="h-left">
-                            <h4><i class="ri-bank-card-2-line"></i> ${w.method}</h4>
-                            <span>${w.address}</span>
-                            <div class="st-badge ${stClass}">${stText}</div>
-                        </div>
-                        <div class="h-right">
-                            <div class="h-amount">$${w.amount}</div>
-                        </div>
+                s.forEach(c => {
+                    let w = c.val();
+                    d.innerHTML += `<div class="glass-card" style="padding:10px; font-size:0.8rem;">
+                        <div style="display:flex; justify-content:space-between;"><span>${w.method}</span><b>$${w.amount}</b></div>
+                        <div style="color:${w.status==='pending'?'orange':(w.status==='approved'?'var(--primary)':'red')}">${w.status}</div>
                     </div>`;
                 });
             });
@@ -508,7 +415,75 @@
             loadChat();
         }
 
-        // Feature Logic
+        // --- FIXED: startGame Logic ---
+        function openTasks(cat) {
+            nav('tasks');
+            const list = document.getElementById('tasks-list');
+            list.innerHTML = '<p style="text-align:center; color:#aaa;">جاري جلب البيانات...</p>';
+            db.ref('tasks').orderByChild('category').equalTo(cat).once('value', s => {
+                list.innerHTML = '';
+                if(s.numChildren() === 0) { list.innerHTML = '<p style="text-align:center;">لا توجد عناصر حالياً</p>'; return; }
+                s.forEach(c => {
+                    let t = c.val();
+                    list.innerHTML += `
+                    <div class="task-item">
+                        <div><div style="font-weight:bold;">${t.title}</div><div style="font-size:0.8rem; color:#aaa;">⏱ ${t.time}s</div></div>
+                        <div><span style="color:var(--primary); font-weight:bold; margin-left:10px;">+${t.points}</span><button onclick="startGame('${c.key}', '${t.type}', '${t.content}', ${t.time}, ${t.points})" class="task-btn">ابدأ</button></div>
+                    </div>`;
+                });
+            });
+        }
+
+        function startGame(id, type, content, time, points) {
+            activeTask = { id, points };
+            document.getElementById('game-overlay').classList.remove('hidden');
+            document.getElementById('claim-area').classList.add('hidden');
+            
+            // KEY FIX: Always use the iframe so the timer remains visible.
+            const frame = document.getElementById('game-frame');
+            frame.style.display = 'block';
+            
+            if(type === 'html') {
+                frame.contentWindow.document.open();
+                frame.contentWindow.document.write(content);
+                frame.contentWindow.document.close();
+            } else {
+                // It's a link. Load it in the iframe.
+                // Note: Some websites refuse to load in iframes (X-Frame-Options).
+                // If it fails, the user will still see the timer running.
+                frame.src = content; 
+            }
+
+            let left = time;
+            document.getElementById('game-timer').textContent = left;
+            if(timerInt) clearInterval(timerInt);
+            timerInt = setInterval(() => {
+                left--;
+                document.getElementById('game-timer').textContent = left;
+                if(left <= 0) {
+                    clearInterval(timerInt);
+                    document.getElementById('game-timer').textContent = "مكتمل!";
+                    document.getElementById('claim-area').classList.remove('hidden');
+                }
+            }, 1000);
+        }
+
+        function claimReward() {
+            if(activeTask) {
+                let finalPts = settings.happyHour ? activeTask.points * 2 : activeTask.points;
+                db.ref('users/'+currentUser.uid).update({points: (userData.points||0)+finalPts});
+                showToast(`+${finalPts} نقطة`);
+                closeGame();
+            }
+        }
+        function closeGame() {
+            document.getElementById('game-overlay').classList.add('hidden');
+            document.getElementById('game-frame').src = 'about:blank';
+            if(timerInt) clearInterval(timerInt);
+            activeTask = null;
+        }
+
+        // Other Functions
         function updateLevel(pts) {
             let level = "مبتدئ", next = 1000, percent = 0;
             if(pts < 1000) { level="مبتدئ"; next=1000; percent=(pts/1000)*100; }
@@ -527,50 +502,6 @@
                 document.getElementById('leader-list').innerHTML = h;
             });
         }
-        function openTasks(cat) {
-            nav('tasks');
-            const list = document.getElementById('tasks-list');
-            list.innerHTML = '<p style="text-align:center; color:#aaa;">جاري جلب البيانات...</p>';
-            db.ref('tasks').orderByChild('category').equalTo(cat).once('value', s => {
-                list.innerHTML = '';
-                if(s.numChildren() === 0) { list.innerHTML = '<p style="text-align:center;">لا توجد عناصر حالياً</p>'; return; }
-                s.forEach(c => {
-                    let t = c.val();
-                    list.innerHTML += `
-                    <div class="task-item">
-                        <div><div style="font-weight:bold;">${t.title}</div><div style="font-size:0.8rem; color:#aaa;">⏱ ${t.time}s</div></div>
-                        <div><span style="color:var(--primary); font-weight:bold; margin-left:10px;">+${t.points}</span><button onclick="startGame('${c.key}', '${t.type}', '${t.content}', ${t.time}, ${t.points})" class="task-btn">ابدأ</button></div>
-                    </div>`;
-                });
-            });
-        }
-        function startGame(id, type, content, time, points) {
-            activeTask = { id, points };
-            document.getElementById('game-overlay').classList.remove('hidden');
-            document.getElementById('claim-area').classList.add('hidden');
-            if(type === 'html') {
-                const f = document.getElementById('game-frame'); f.style.display = 'block';
-                f.contentWindow.document.open(); f.contentWindow.document.write(content); f.contentWindow.document.close();
-            } else {
-                document.getElementById('game-frame').style.display = 'none'; window.open(content, '_blank');
-            }
-            let left = time;
-            document.getElementById('game-timer').textContent = left;
-            if(timerInt) clearInterval(timerInt);
-            timerInt = setInterval(() => {
-                left--; document.getElementById('game-timer').textContent = left;
-                if(left <= 0) { clearInterval(timerInt); document.getElementById('game-timer').textContent = "مكتمل!"; document.getElementById('claim-area').classList.remove('hidden'); }
-            }, 1000);
-        }
-        function claimReward() {
-            if(activeTask) {
-                let finalPts = settings.happyHour ? activeTask.points * 2 : activeTask.points;
-                db.ref('users/'+currentUser.uid).update({points: (userData.points||0)+finalPts});
-                showToast(`+${finalPts} نقطة`);
-                closeGame();
-            }
-        }
-        function closeGame() { document.getElementById('game-overlay').classList.add('hidden'); document.getElementById('game-frame').src = 'about:blank'; if(timerInt) clearInterval(timerInt); activeTask = null; }
         function openWheel() { document.getElementById('wheel-overlay').classList.remove('hidden'); }
         function spinWheel() {
             const btn = document.getElementById('spin-btn'); btn.disabled = true;
