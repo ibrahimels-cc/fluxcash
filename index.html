@@ -54,21 +54,10 @@
         .task-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 15px; border-radius: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
         .task-btn { background: var(--secondary); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
 
-        /* FIXED GAME OVERLAY & HEADER */
+        /* Game Overlay */
         #game-overlay { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; }
-        #game-header { 
-            padding: 10px 20px; 
-            background: rgba(10,10,10,0.95); 
-            border-bottom: 1px solid var(--primary); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            height: 70px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-        }
-        #game-info { display: flex; flex-direction: column; }
-        #game-timer { color: var(--primary); font-weight: bold; font-size: 1.2rem; font-family: monospace; }
-        #game-reward-display { font-size: 0.8rem; color: #fff; }
+        #game-header { padding: 15px; background: #111; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; height: 70px; }
+        #game-timer { background: var(--primary); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
         #game-frame { flex: 1; border: none; width: 100%; background: #fff; }
 
         /* Wheel Overlay */
@@ -88,12 +77,19 @@
         .bc-top { top: 20px; } .bc-bottom { bottom: 90px; } .bc-center { top: 50%; transform: translateY(-50%); }
         @keyframes popIn { from{transform:translateY(-20px);opacity:0} to{transform:translateY(0);opacity:1} }
 
-        /* Level */
-        .level-container { margin-top: 20px; text-align: right; }
-        .level-bar-bg { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 5px; }
+        /* PROFILE SPECIAL STYLES */
+        .level-container { margin-top: 10px; text-align: right; }
+        .level-bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 5px; }
         .level-bar-fill { height: 100%; background: var(--gradient); width: 0%; transition: 1s; }
         .level-badge { background: var(--secondary); padding: 2px 10px; border-radius: 10px; font-size: 0.7rem; color: white; }
+        
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; text-align: center; }
+        .stat-box { background: rgba(255,255,255,0.02); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-num { font-weight: bold; color: var(--primary); font-size: 1.1rem; }
+        .stat-lbl { font-size: 0.7rem; color: #aaa; }
 
+        .security-badge { display: flex; align-items: center; gap: 10px; background: rgba(0, 255, 136, 0.05); padding: 10px; border-radius: 10px; border: 1px solid rgba(0, 255, 136, 0.2); margin-bottom: 15px; }
+        
         /* Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
         .nav-item { color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; transition: 0.3s; }
@@ -102,6 +98,8 @@
         /* Toast */
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #111; border: 1px solid var(--primary); padding: 10px 20px; border-radius: 30px; z-index: 10000; transition: 0.3s; display: flex; align-items: center; gap: 10px; opacity: 0; }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        
+        .badge-verified { color: #1da1f2; margin-right: 5px; font-size: 1.1rem; filter: drop-shadow(0 0 2px #1da1f2); }
     </style>
 </head>
 <body>
@@ -118,6 +116,7 @@
     <div id="ban-screen" class="hidden" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
         <i class="ri-prohibited-line" style="font-size:5rem;color:var(--danger);margin-bottom:20px;"></i>
         <h2 style="color:var(--danger);">تم حظر حسابك</h2>
+        <button onclick="nav('support'); document.getElementById('ban-screen').classList.add('hidden');" class="btn btn-outline" style="width:auto; margin-top:20px;">تواصل مع الدعم</button>
     </div>
 
     <!-- Flash Popup -->
@@ -149,8 +148,8 @@
                 <div style="display:flex; align-items:center; gap:10px;">
                     <img id="u-avatar-small" class="avatar-img" src="">
                     <div>
-                        <div style="font-size:0.8rem; color:#aaa;">مرحباً، <span id="ver-badge"></span></div>
-                        <div style="font-weight:bold;" id="u-name">User</div>
+                        <div style="font-size:0.8rem; color:#aaa;">مرحباً،</div>
+                        <div style="font-weight:bold; display:flex; align-items:center;" id="u-name">User</div>
                     </div>
                 </div>
             </div>
@@ -177,19 +176,19 @@
 
             <div class="earn-grid">
                 <div class="glass-card earn-card" onclick="openTasks('game')"><i class="ri-gamepad-fill earn-icon" style="color:#ff0055;"></i><h4>ألعاب</h4></div>
-                <div class="glass-card earn-card" onclick="openTasks('task')"><i class="ri-todo-fill earn-icon" style="color:#0088ff;"></i><h4>مهام</h4></div>
                 <div class="glass-card earn-card" onclick="openWheel()"><i class="ri-pie-chart-2-fill earn-icon" style="color:#ffaa00;"></i><h4>عجلة الحظ</h4></div>
+                <div class="glass-card earn-card" onclick="openScratch()"><i class="ri-brush-2-fill earn-icon" style="color:#0088ff;"></i><h4>بطاقة حك</h4></div>
                 <div class="glass-card earn-card" onclick="dailyBonus()"><i class="ri-gift-2-fill earn-icon" style="color:#00ff88;"></i><h4>يومي</h4></div>
             </div>
         </section>
 
-        <!-- LIST -->
+        <!-- CONTENT LIST -->
         <section id="tasks-page" class="hidden fade-in" style="padding:20px;">
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
                 <button onclick="nav('home')" style="background:none; border:none; color:white; font-size:1.5rem;"><i class="ri-arrow-right-line"></i></button>
                 <h2>القائمة</h2>
             </div>
-            <div id="tasks-list"></div>
+            <div id="tasks-list"><p style="text-align:center; color:#aaa;">جاري التحميل...</p></div>
         </section>
 
         <!-- WITHDRAW -->
@@ -207,33 +206,70 @@
         <!-- SUPPORT -->
         <section id="support-page" class="hidden fade-in" style="padding:20px;">
             <h2 style="margin-bottom:20px;">الدعم الفني</h2>
-            <div id="chat-box" class="glass-card" style="height:60vh; overflow-y:auto; display:flex; flex-direction:column; gap:10px;"></div>
+            <div id="chat-box" class="glass-card" style="height:60vh; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:15px;"></div>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="chat-input" class="input-box" style="margin:0;" placeholder="اكتب رسالتك...">
                 <button onclick="sendMsg()" class="btn btn-primary" style="width:auto;"><i class="ri-send-plane-fill"></i></button>
             </div>
         </section>
 
-        <!-- PROFILE -->
+        <!-- PROFILE (UPDATED) -->
         <section id="profile-page" class="hidden fade-in" style="padding:20px; text-align:center;">
             <img id="p-avatar" class="avatar-img" style="width:100px; height:100px; margin:0 auto 15px;" src="">
             <h2 id="p-name-2">User</h2>
-            <div style="margin:5px auto; display:inline-block; background:rgba(255,255,255,0.1); padding:5px 15px; border-radius:20px; font-size:0.8rem;"><span id="p-country">🌍 Global</span></div>
-            <div class="glass-card level-container">
-                <div style="display:flex; justify-content:space-between;"><span id="lvl-name" class="level-badge">مبتدئ</span><small id="lvl-next">...</small></div>
-                <div class="level-bar-bg"><div id="lvl-bar" class="level-bar-fill"></div></div>
+            
+            <div style="margin:5px auto; display:inline-block; background:rgba(255,255,255,0.1); padding:5px 15px; border-radius:20px; font-size:0.8rem;">
+                <span id="p-country">🌍 Global</span>
             </div>
+
+            <!-- NEW: STATS DASHBOARD -->
+            <div class="glass-card">
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-num" id="s-spins">0</div>
+                        <div class="stat-lbl">تدوير</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-num" id="s-withdraws">0</div>
+                        <div class="stat-lbl">سحوبات</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-num" id="s-total">0</div>
+                        <div class="stat-lbl">مجموع</div>
+                    </div>
+                </div>
+                <!-- NEW: Referral Tier -->
+                <div style="text-align:left; margin-top:15px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                        <span>مستوى الدعوات</span>
+                        <span style="color:var(--primary);">الهدف: 100 شخص</span>
+                    </div>
+                    <div class="level-bar-bg"><div class="level-bar-fill" style="width:20%;"></div></div>
+                </div>
+            </div>
+
+            <!-- NEW: Security Badge -->
+            <div class="security-badge">
+                <i class="ri-shield-check-fill" style="font-size:2rem; color:var(--primary);"></i>
+                <div style="text-align:left;">
+                    <div style="font-weight:bold;">حساب آمن</div>
+                    <div style="font-size:0.7rem; color:#aaa;">ID: <span id="p-uid">...</span></div>
+                </div>
+            </div>
+
             <p id="p-email-2" style="color:#aaa; margin-top:10px; margin-bottom:20px;">...</p>
+
             <div class="glass-card" style="border:1px dashed var(--primary); margin-top:10px;">
                 <div style="font-size:0.8rem; color:#aaa;">كود الدعوة</div>
                 <span id="ref-code" style="font-size:1.2rem; font-weight:bold; color:var(--primary); letter-spacing:2px;">LOADING</span>
             </div>
+
             <button onclick="auth.signOut()" class="btn btn-outline" style="border-color:var(--danger); color:var(--danger); margin-top:20px;">خروج</button>
         </section>
 
     </div>
 
-    <!-- GAME OVERLAY (With Info & Auto Close) -->
+    <!-- GAME OVERLAY -->
     <div id="game-overlay" class="hidden">
         <div id="game-header">
             <div id="game-info">
@@ -242,7 +278,6 @@
             </div>
             <button onclick="closeGame()" style="background:var(--danger); border:none; color:white; padding:5px 15px; border-radius:8px; font-weight:bold;">خروج</button>
         </div>
-        <!-- Using Iframe for everything to ensure timer stays on top -->
         <iframe id="game-frame" style="width:100%; flex:1; border:none; background:#fff;"></iframe>
     </div>
 
@@ -252,6 +287,16 @@
         <div style="position:relative;"><div class="wheel-pointer"></div><div class="wheel-container" id="wheel"><div style="position:absolute; top:0; left:0; width:100%; height:100%; background:conic-gradient(#ff0055 0deg 90deg, #0088ff 90deg 180deg, #ffaa00 180deg 270deg, #00ff88 270deg 360deg);"></div></div></div>
         <button onclick="spinWheel()" class="btn btn-primary" style="width:200px; margin-top:30px;" id="spin-btn">دوران</button>
         <button onclick="document.getElementById('wheel-overlay').classList.add('hidden')" style="background:none; border:none; color:#aaa; margin-top:20px;">إغلاق</button>
+    </div>
+
+    <!-- SCRATCH -->
+    <div id="scratch-overlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <h2 style="color:white; margin-bottom:20px;">امسح واربح 🎁</h2>
+        <div style="position:relative; width:300px; height:150px; border-radius:15px; overflow:hidden; border:2px solid var(--secondary);">
+            <div id="scratch-reward" style="position:absolute; inset:0; background:#222; display:flex; justify-content:center; align-items:center; font-size:2.5rem; font-weight:bold; color:gold;">?</div>
+            <canvas id="scratch-canvas" width="300" height="150" style="position:absolute; top:0; left:0; z-index:2; cursor:crosshair;"></canvas>
+        </div>
+        <button onclick="document.getElementById('scratch-overlay').classList.add('hidden')" class="btn btn-outline" style="width:150px; margin-top:20px;">إغلاق</button>
     </div>
 
     <nav class="bottom-nav hidden" id="navbar">
@@ -307,27 +352,36 @@
                 userData = s.val();
                 if(userData.isBanned) { document.getElementById('ban-screen').classList.remove('hidden'); return; }
                 
-                document.getElementById('u-name').innerText = userData.username;
-                let verHtml = userData.isVerified ? ' <i class="ri-checkbox-circle-fill" style="color:#1da1f2;"></i>' : '';
+                // Fix: Verify Badge Logic - Clean & Single
+                let verHtml = userData.isVerified ? ' <i class="ri-checkbox-circle-fill badge-verified"></i>' : '';
+                document.getElementById('u-name').innerHTML = userData.username + verHtml;
                 document.getElementById('p-name-2').innerHTML = userData.username + verHtml;
+                
                 document.getElementById('p-email-2').textContent = userData.email;
                 document.getElementById('u-usd').textContent = userData.balance.toFixed(2);
                 document.getElementById('u-pts').textContent = userData.points;
                 document.getElementById('ref-code').innerText = userData.refCode;
+                document.getElementById('p-uid').innerText = currentUser.uid.substring(0,8) + '...';
+                
+                // Update New Stats
+                document.getElementById('s-spins').innerText = userData.spinsToday || 0;
+                document.getElementById('s-total').innerText = userData.points || 0;
+                
                 let av = userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username}`;
                 document.getElementById('u-avatar-small').src = av;
                 document.getElementById('p-avatar').src = av;
-                if(userData.isVerified) document.getElementById('ver-badge').innerHTML = '<i class="ri-checkbox-circle-fill" style="color:#1da1f2"></i>';
-                updateLevel(userData.points);
             });
 
             db.ref('withdrawals').orderByChild('userId').equalTo(currentUser.uid).on('value', s => {
-                let h=''; s.forEach(c => {
+                let h=''; let count=0;
+                s.forEach(c => {
+                    count++;
                     let w=c.val(), st=w.status;
                     let col = st==='approved'?'var(--primary)':(st==='rejected'?'red':'orange');
                     h+=`<div class="glass-card" style="padding:10px; font-size:0.8rem;"><div style="display:flex;justify-content:space-between;"><span>${w.method}</span><b>$${w.amount}</b></div><div style="color:${col}">${st}</div></div>`;
                 });
                 document.getElementById('w-history').innerHTML = h;
+                document.getElementById('s-withdraws').innerText = count;
             });
 
             db.ref('payment_methods').on('value', s => {
@@ -337,20 +391,38 @@
 
             db.ref('system_alerts').limitToLast(1).on('child_added', s => {
                 let a = s.val();
-                if(Date.now()-a.timestamp < 10000) showToast(a.message);
+                if(Math.abs(Date.now() - a.timestamp) < 3600000) { 
+                    let div = document.createElement('div');
+                    div.className = `broadcast-msg bc-${a.position || 'top'}`;
+                    let borderColor = '#00ff88';
+                    if(a.type === 'info') borderColor = '#0088ff';
+                    if(a.type === 'warning') borderColor = '#ffaa00';
+                    div.style.borderColor = borderColor;
+                    div.innerText = a.message;
+                    document.body.appendChild(div);
+                    setTimeout(() => div.remove(), (a.duration || 5) * 1000);
+                }
+            });
+
+            db.ref('users/'+currentUser.uid+'/notifications').on('child_added', s => {
+                const n = s.val();
+                const div = document.createElement('div');
+                div.className = 'glass-card';
+                div.style.border = '1px solid var(--secondary)';
+                div.innerHTML = `🔔 <b>تنبيه خاص:</b> ${n.msg}`;
+                document.getElementById('private-notifs').prepend(div);
             });
 
             loadChat();
         }
 
-        // --- FIXED GAME LOGIC ---
         function openTasks(cat) {
             nav('tasks');
             const list = document.getElementById('tasks-list');
             list.innerHTML = '<p style="text-align:center; color:#aaa;">جاري جلب البيانات...</p>';
             db.ref('tasks').orderByChild('category').equalTo(cat).once('value', s => {
                 list.innerHTML = '';
-                if(s.numChildren() === 0) { list.innerHTML = '<p style="text-align:center;">لا توجد مهام</p>'; return; }
+                if(s.numChildren() === 0) { list.innerHTML = '<p style="text-align:center;">لا توجد عناصر حالياً</p>'; return; }
                 s.forEach(c => {
                     let t=c.val();
                     list.innerHTML += `<div class="task-item"><div><b>${t.title}</b><br><small>${t.time}s</small></div><button onclick="startGame('${c.key}','${t.type}','${t.content}',${t.time},${t.points})" class="task-btn">+${t.points}</button></div>`;
@@ -361,45 +433,20 @@
         function startGame(id, type, content, time, points) {
             activeTask = { pts: points };
             document.getElementById('game-overlay').classList.remove('hidden');
-            
-            // Show Reward Amount in Header
             document.getElementById('game-reward-display').innerText = `ستربح: ${points} نقطة`;
-
             const frame = document.getElementById('game-frame');
-            if(type === 'html') {
-                frame.contentWindow.document.open();
-                frame.contentWindow.document.write(content);
-                frame.contentWindow.document.close();
-            } else {
-                // IMPORTANT: For links to show timer, we use iframe. 
-                // Note: Some sites block iframes.
-                frame.src = content; 
-            }
-
+            frame.style.display = 'block'; 
+            if(type === 'html') { frame.contentWindow.document.open(); frame.contentWindow.document.write(content); frame.contentWindow.document.close(); } 
+            else { frame.src = content; }
             let t = time;
             document.getElementById('game-timer').innerText = formatTime(t);
-            
             if(timerInt) clearInterval(timerInt);
             timerInt = setInterval(() => {
-                t--;
-                document.getElementById('game-timer').innerText = formatTime(t);
-                if(t <= 0) {
-                    clearInterval(timerInt);
-                    // AUTO CLAIM
-                    let finalPts = settings.happyHour ? points * 2 : points;
-                    db.ref('users/'+currentUser.uid).update({points: (userData.points||0) + finalPts});
-                    closeGame();
-                    showToast(`مبروك! ربحت ${finalPts} نقطة`);
-                }
+                t--; document.getElementById('game-timer').innerText = formatTime(t);
+                if(t <= 0) { clearInterval(timerInt); let finalPts = settings.happyHour ? points * 2 : points; db.ref('users/'+currentUser.uid).update({points: (userData.points||0) + finalPts}); closeGame(); showToast(`مبروك! ربحت ${finalPts} نقطة`); }
             }, 1000);
         }
-
-        function closeGame() {
-            document.getElementById('game-overlay').classList.add('hidden');
-            document.getElementById('game-frame').src = 'about:blank';
-            clearInterval(timerInt);
-        }
-
+        function closeGame() { document.getElementById('game-overlay').classList.add('hidden'); document.getElementById('game-frame').src = 'about:blank'; clearInterval(timerInt); }
         function formatTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
 
         function dailyBonus() {
@@ -417,23 +464,51 @@
             let today = new Date().toDateString();
             if(userData.lastWheelDate !== today) userData.spinsToday = 0;
             if((userData.spinsToday||0) >= limit) return showToast("انتهت المحاولات");
-
             const btn = document.getElementById('spin-btn'); btn.disabled = true;
             document.getElementById('wheel').style.transform = `rotate(${Math.floor(1000 + Math.random() * 3000)}deg)`;
             setTimeout(() => {
                 let prizes = (settings.wheelPrizes || "10,20,50,0,100").split(',').map(Number);
                 let win = prizes[Math.floor(Math.random() * prizes.length)];
-                db.ref('users/'+currentUser.uid).update({
-                    points: userData.points + win,
-                    spinsToday: (userData.spinsToday||0) + 1,
-                    lastWheelDate: today
-                });
+                db.ref('users/'+currentUser.uid).update({points: userData.points + win, spinsToday: (userData.spinsToday||0) + 1, lastWheelDate: today});
                 showToast(`ربحت ${win} نقطة`);
                 btn.disabled = false;
                 document.getElementById('wheel-overlay').classList.add('hidden');
             }, 4000);
         }
         function openWheel() { document.getElementById('wheel-overlay').classList.remove('hidden'); }
+
+        // --- SCRATCH CARD FEATURE ---
+        function openScratch() {
+            let now = Date.now();
+            // Check scratch cooldown (e.g., 1 hour, or use daily cooldown settings)
+            if(userData.lastScratch && (now - userData.lastScratch < 3600000)) return showToast("انتظر قليلاً");
+
+            document.getElementById('scratch-overlay').classList.remove('hidden');
+            const canvas = document.getElementById('scratch-canvas');
+            const ctx = canvas.getContext('2d');
+            const rewardEl = document.getElementById('scratch-reward');
+            
+            let reward = Math.floor(Math.random() * 50) + 10;
+            rewardEl.innerText = "+" + reward;
+            
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = '#C0C0C0'; ctx.fillRect(0, 0, 300, 150);
+            
+            let isDrawing = false, scratched = 0, won = false;
+            function scratch(x, y) {
+                if(won) return;
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI * 2); ctx.fill();
+                scratched += 100;
+                if(scratched > 300 * 150 * 0.15) { won=true; setTimeout(() => { db.ref('users/'+currentUser.uid).update({points: userData.points+reward, lastScratch: Date.now()}); showToast(`مبروك! ربحت ${reward}`); document.getElementById('scratch-overlay').classList.add('hidden'); }, 1000); }
+            }
+            canvas.ontouchstart = (e) => { isDrawing = true; let r = canvas.getBoundingClientRect(); scratch(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); };
+            canvas.ontouchmove = (e) => { if(isDrawing) { e.preventDefault(); let r = canvas.getBoundingClientRect(); scratch(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); }};
+            canvas.ontouchend = () => { isDrawing = false; };
+            canvas.onmousedown = (e) => { isDrawing = true; scratch(e.offsetX, e.offsetY); };
+            canvas.onmousemove = (e) => { if(isDrawing) scratch(e.offsetX, e.offsetY); };
+            canvas.onmouseup = () => { isDrawing = false; };
+        }
 
         let tid=null;
         function loadChat() {
@@ -458,7 +533,6 @@
         function pm(t) { db.ref('support_tickets/'+tid+'/messages').push({text:t, sender:'user'}); }
 
         function nav(p) { document.querySelectorAll('section').forEach(s=>s.classList.add('hidden')); document.getElementById(p+'-page').classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); }
-        function updateLevel(p) { let l="مبتدئ", w=0; if(p>1000){l="محترف"; w=30;} if(p>5000){l="خبير"; w=60;} if(p>20000){l="أسطورة"; w=100;} document.getElementById('lvl-name').innerText=l; document.getElementById('lvl-bar').style.width=w+'%'; }
         function loadLeaderboard() { db.ref('users').orderByChild('points').limitToLast(5).once('value', s=>{ let h=''; let a=[]; s.forEach(c=>a.push(c.val())); a.reverse().forEach((u,i)=>h+=`<div class="leader-item">#${i+1} ${u.username} (${u.points})</div>`); document.getElementById('leader-list').innerHTML=h; }); }
         function convert() { let r = settings.exchangeRate || 1000; if(userData.points < r) return showToast(`تحتاج ${r}`); db.ref('users/'+currentUser.uid).update({points: userData.points-r, balance: userData.balance+1}); showToast("تم التحويل"); }
         function withdraw() { let a = parseFloat(document.getElementById('w-amount').value); if(a > userData.balance) return showToast("رصيد غير كاف"); db.ref('withdrawals').push({userId:currentUser.uid, amount:a, method:document.getElementById('w-method').value, address:document.getElementById('w-addr').value, status:'pending'}); db.ref('users/'+currentUser.uid).update({balance: userData.balance-a}); showToast("تم الطلب"); }
