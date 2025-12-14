@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Flux Cash - اربح المال</title>
+    <title>Flux Cash - User Ultimate</title>
     
-    <!-- خطوط وأيقونات -->
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
-    <!-- Firebase SDK -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -25,6 +25,7 @@
             --text-main: #ffffff;
             --text-muted: #aaaaaa;
             --danger: #ff3333;
+            --warning: #ffaa00;
             --font: 'Tajawal', sans-serif;
             --gradient: linear-gradient(135deg, var(--secondary), var(--primary));
         }
@@ -32,79 +33,100 @@
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; user-select: none; }
         body { font-family: var(--font); background: var(--bg-dark); color: var(--text-main); overflow-x: hidden; min-height: 100vh; padding-bottom: 80px; }
 
-        /* Helpers */
         .hidden { display: none !important; }
-        .flex-center { display: flex; align-items: center; justify-content: center; }
-        .glass-card { background: var(--card-bg); backdrop-filter: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.2); margin-bottom: 15px; position: relative; overflow: hidden; }
+        .glass-card { background: var(--card-bg); backdrop-filter: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.2); margin-bottom: 15px; position: relative; overflow: hidden; transition: 0.3s; }
         .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; font-family: var(--font); color: white; }
         .btn-primary { background: var(--gradient); box-shadow: 0 5px 20px var(--primary-glow); }
         .btn-primary:active { transform: scale(0.98); }
         .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
         .input-box { width: 100%; padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-family: var(--font); margin-bottom: 10px; }
-        .input-box:focus { border-color: var(--primary); }
-
+        
         /* Animations */
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); } }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 1. Splash Screen */
-        #splash { position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .logo-text { font-size: 3rem; font-weight: 900; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .loader { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* 2. Onboarding */
-        #onboarding { position: fixed; inset: 0; background: var(--bg-dark); z-index: 9000; display: flex; flex-direction: column; }
-        .slide { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; display: none; }
-        .slide.active { display: flex; animation: fadeIn 0.5s; }
-        .slide-img { width: 200px; height: 200px; object-fit: contain; margin-bottom: 30px; animation: float 3s ease-in-out infinite; }
-        .slide h2 { margin-bottom: 10px; color: var(--primary); }
-        .slide p { color: var(--text-muted); line-height: 1.6; }
-        .dots { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
-        .dot { width: 10px; height: 10px; background: rgba(255,255,255,0.2); border-radius: 50%; }
-        .dot.active { background: var(--primary); width: 25px; border-radius: 10px; }
-
-        /* 3. Auth */
-        #auth { padding: 30px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
-
-        /* 4. Main App */
-        /* Header */
-        .app-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .user-info { display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(45deg, #333, #111); display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); font-size: 1.2rem; }
-        
-        /* Balance Card */
-        .balance-card { text-align: center; margin: 0 20px; padding: 25px; background: radial-gradient(circle at top right, rgba(0,255,136,0.1), transparent), var(--card-bg); border: 1px solid var(--primary-glow); }
+        /* App Specifics */
+        .avatar-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #000; }
         .balance-usd { font-size: 3rem; font-weight: 900; letter-spacing: -1px; }
         .points-tag { background: rgba(0,0,0,0.4); padding: 6px 15px; border-radius: 20px; font-size: 0.9rem; color: var(--primary); display: inline-flex; align-items: center; gap: 5px; margin-top: 5px; }
         
-        /* Ticker */
-        .ticker-wrap { width: 100%; overflow: hidden; background: rgba(255,255,255,0.02); padding: 8px 0; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .ticker { display: inline-block; white-space: nowrap; animation: ticker 20s linear infinite; }
-        .ticker-item { display: inline-block; padding: 0 20px; color: #aaa; font-size: 0.8rem; }
-        .ticker-item span { color: var(--success-color, #00ff88); font-weight: bold; }
-        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        /* Earn Grid */
+        /* Grid & Tasks */
         .earn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
         .earn-card { text-align: center; padding: 20px; transition: 0.3s; cursor: pointer; }
-        .earn-card:active { transform: scale(0.95); background: rgba(0,255,136,0.1); }
         .earn-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+        .task-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 15px; border-radius: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
+        .task-btn { background: var(--secondary); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
 
-        /* Support Chat */
-        .chat-area { height: 60vh; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 0.9rem; line-height: 1.4; }
-        .msg-me { align-self: flex-end; background: var(--gradient); color: white; border-bottom-left-radius: 0; }
-        .msg-admin { align-self: flex-start; background: #333; color: white; border-bottom-right-radius: 0; }
+        /* Game Overlay */
+        #game-overlay { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; }
+        #game-header { padding: 15px; background: #111; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        #game-timer { background: var(--primary); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
+        #game-frame { flex: 1; border: none; width: 100%; background: #fff; }
 
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+        /* Wheel Overlay */
+        #wheel-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .wheel-container { width: 300px; height: 300px; border-radius: 50%; border: 5px solid var(--primary); position: relative; overflow: hidden; background: #111; transition: 5s cubic-bezier(0.25, 0.1, 0.25, 1); }
+        .wheel-section { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; left: 0; top: 0; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+        .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--danger); z-index: 10; }
+
+        /* Support Chat CSS */
+        .msg { padding: 8px 12px; border-radius: 10px; margin-bottom: 8px; max-width: 80%; width: fit-content; font-size: 0.9rem; }
+        .msg-me { align-self: flex-end; background: var(--gradient); color: white; margin-right: 0; margin-left: auto; }
+        .msg-admin { align-self: flex-start; background: #333; color: white; margin-left: 0; margin-right: auto; }
+
+        /* Popups & Notifications */
+        #flash-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 20000; display: flex; justify-content: center; align-items: center; }
+        .broadcast-msg { position: fixed; left: 20px; right: 20px; background: rgba(20,20,20,0.95); border: 1px solid var(--primary); padding: 15px; border-radius: 10px; z-index: 9000; text-align: center; color: white; animation: popIn 0.5s; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        .bc-top { top: 20px; } .bc-bottom { bottom: 90px; } .bc-center { top: 50%; transform: translateY(-50%); }
+        @keyframes popIn { from{transform:translateY(-20px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+        /* Leaderboard Items */
+        .leader-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .leader-item:first-child { color: gold; font-weight: bold; }
+        .leader-item:nth-child(2) { color: silver; }
+        .leader-item:nth-child(3) { color: #cd7f32; }
+
+        /* NEW: Level Progress Bar */
+        .level-container { margin-top: 20px; text-align: right; }
+        .level-bar-bg { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 5px; }
+        .level-bar-fill { height: 100%; background: var(--gradient); width: 0%; transition: 1s; }
+        .level-badge { background: var(--secondary); padding: 2px 10px; border-radius: 10px; font-size: 0.7rem; color: white; }
+
+        /* ============================
+           NEW: ADVANCED WITHDRAWAL HISTORY
+           ============================ */
+        .history-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .h-item { 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 16px; 
+            padding: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: 0.3s;
+        }
+        .h-item:hover { transform: translateX(-5px); background: rgba(255,255,255,0.05); }
+        .h-left h4 { font-size: 1rem; color: white; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+        .h-left span { font-size: 0.75rem; color: #aaa; display: block; }
+        .h-right { text-align: left; }
+        .h-amount { font-size: 1.1rem; font-weight: bold; color: white; letter-spacing: 0.5px; }
+        
+        /* Status Badges */
+        .st-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; margin-top: 5px; display: inline-flex; align-items: center; gap: 4px; font-weight: bold; }
+        
+        /* Pending Style */
+        .st-pending { background: rgba(255, 170, 0, 0.15); color: var(--warning); border: 1px solid rgba(255, 170, 0, 0.3); }
+        /* Approved Style */
+        .st-approved { background: rgba(0, 255, 136, 0.15); color: var(--primary); border: 1px solid rgba(0, 255, 136, 0.3); box-shadow: 0 0 10px rgba(0, 255, 136, 0.1); }
+        /* Rejected Style */
+        .st-rejected { background: rgba(255, 51, 51, 0.15); color: var(--danger); border: 1px solid rgba(255, 51, 51, 0.3); }
+
+        /* Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
         .nav-item { color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; transition: 0.3s; }
-        .nav-item i { font-size: 1.5rem; transition: 0.3s; }
         .nav-item.active { color: var(--primary); }
-        .nav-item.active i { transform: translateY(-3px); text-shadow: 0 0 10px var(--primary); }
 
         /* Toast */
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #111; border: 1px solid var(--primary); padding: 10px 20px; border-radius: 30px; z-index: 10000; transition: 0.3s; display: flex; align-items: center; gap: 10px; opacity: 0; }
@@ -113,212 +135,199 @@
 </head>
 <body>
 
-    <!-- Notification -->
     <div id="toast"><i class="ri-checkbox-circle-fill" style="color:var(--primary)"></i> <span id="toast-msg">تم بنجاح</span></div>
 
-    <!-- 1️⃣ Splash Screen -->
-    <div id="splash">
-        <div class="logo-text">FLUX</div>
-        <p style="letter-spacing: 5px; color: var(--text-muted); font-size: 0.8rem;">C A S H</p>
-        <div class="loader"></div>
-        <p style="margin-top: 20px; font-size: 0.8rem; color: #555;">v1.0.0 by Ibrahim</p>
+    <!-- Maintenance Screen -->
+    <div id="maint-screen" class="hidden" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+        <i class="ri-tools-fill" style="font-size:5rem;color:var(--primary);margin-bottom:20px;"></i>
+        <h2 style="color:white;">التطبيق في وضع الصيانة</h2>
+        <p style="color:#aaa;">نعود قريباً بتحديثات جديدة!</p>
     </div>
 
-    <!-- 2️⃣ Onboarding Screens -->
-    <div id="onboarding" class="hidden">
-        <!-- Slide 1 -->
-        <div class="slide active" id="slide1">
-            <i class="ri-gamepad-line slide-img" style="font-size: 8rem; color: #ff0055;"></i>
-            <h2>العب واربح</h2>
-            <p>حول وقت فراغك إلى أموال حقيقية من خلال لعب ألعاب ممتعة وبسيطة.</p>
-        </div>
-        <!-- Slide 2 -->
-        <div class="slide" id="slide2">
-            <i class="ri-task-line slide-img" style="font-size: 8rem; color: #0088ff;"></i>
-            <h2>أكمل المهام</h2>
-            <p>مهام يومية بسيطة تمنحك نقاطاً فورية يمكنك تحويلها لدولارات.</p>
-        </div>
-        <!-- Slide 3 -->
-        <div class="slide" id="slide3">
-            <i class="ri-group-line slide-img" style="font-size: 8rem; color: #ffaa00;"></i>
-            <h2>ادعُ أصدقاءك</h2>
-            <p>احصل على 15% من أرباح كل صديق تقوم بدعوته للتطبيق مدى الحياة.</p>
-        </div>
+    <!-- Ban Screen -->
+    <div id="ban-screen" class="hidden" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+        <i class="ri-prohibited-line" style="font-size:5rem;color:var(--danger);margin-bottom:20px;"></i>
+        <h2 style="color:var(--danger);">تم حظر حسابك</h2>
+        <p style="color:#aaa;">تم إيقاف حسابك بسبب مخالفة الشروط.</p>
+        <button onclick="nav('support'); document.getElementById('ban-screen').classList.add('hidden');" class="btn btn-outline" style="width:auto; margin-top:20px;">تواصل مع الدعم</button>
+    </div>
 
-        <!-- Controls -->
-        <div style="position: absolute; bottom: 40px; width: 100%; padding: 0 30px;">
-            <div class="dots">
-                <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
-            </div>
-            <button onclick="nextSlide()" class="btn btn-primary" id="onboard-btn">التالي</button>
-            <p onclick="skipOnboarding()" style="text-align: center; margin-top: 15px; color: #777; font-size: 0.9rem; cursor: pointer;">تخطي</p>
+    <!-- Flash Event Popup -->
+    <div id="flash-popup" class="hidden" onclick="this.classList.add('hidden')">
+        <div style="position:relative; width:90%; max-width:350px;">
+            <button style="position:absolute;top:-15px;right:-15px;background:red;color:white;border:none;border-radius:50%;width:30px;height:30px;font-weight:bold;">X</button>
+            <img id="flash-img-src" src="" style="width:100%; border-radius:15px; border:2px solid var(--primary); box-shadow: 0 0 30px var(--primary-glow);">
         </div>
     </div>
 
-    <!-- 3️⃣ Authentication -->
-    <div id="auth" class="hidden">
+    <!-- Auth -->
+    <div id="auth" style="padding:30px; min-height:100vh; display:flex; flex-direction:column; justify-content:center;">
         <div class="glass-card fade-in">
-            <h2 style="text-align: center; margin-bottom: 20px;">مرحباً بك 👋</h2>
-            
-            <div id="register-fields" class="hidden">
-                <input type="text" id="reg-name" class="input-box" placeholder="اسم المستخدم">
-                <input type="text" id="reg-ref" class="input-box" placeholder="كود الدعوة (اختياري)">
-            </div>
-            
+            <h2 style="text-align:center; margin-bottom:20px;">تسجيل الدخول</h2>
+            <input type="text" id="reg-name" class="input-box hidden" placeholder="الاسم">
             <input type="email" id="email" class="input-box" placeholder="البريد الإلكتروني">
             <input type="password" id="pass" class="input-box" placeholder="كلمة المرور">
-            
-            <button onclick="handleAuth()" class="btn btn-primary" id="auth-btn">تسجيل الدخول</button>
-            
-            <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">
-                <span id="auth-switch-text">ليس لديك حساب؟</span>
-                <span onclick="toggleAuthMode()" style="color: var(--primary); font-weight: bold; cursor: pointer;">انشئ حساب</span>
-            </p>
+            <button onclick="handleAuth()" class="btn btn-primary" id="auth-btn">دخول</button>
+            <p onclick="toggleAuth()" style="text-align:center; margin-top:15px; color:#aaa; cursor:pointer;">ليس لديك حساب؟</p>
         </div>
     </div>
 
-    <!-- 4️⃣ Main Application -->
+    <!-- App -->
     <div id="app" class="hidden">
         
-        <!-- صفحة الرئيسية -->
+        <!-- HOME -->
         <section id="home-page" class="fade-in">
             <div class="app-header">
-                <div class="user-info">
-                    <div class="avatar">👤</div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img id="u-avatar-small" class="avatar-img" src="">
                     <div>
-                        <div style="font-size: 0.8rem; color: var(--text-muted);">مرحباً،</div>
-                        <div style="font-weight: bold;" id="display-name">User</div>
+                        <div style="font-size:0.8rem; color:#aaa;">مرحباً، <span id="ver-badge"></span></div>
+                        <div style="font-weight:bold;" id="u-name">User</div>
                     </div>
                 </div>
-                <div style="background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem;">
-                    <i class="ri-shield-star-line" style="color: #ffd700;"></i> المستوى 1
+            </div>
+
+            <div id="private-notifs" style="padding:0 20px;"></div>
+            <div id="broadcast-area"></div>
+
+            <div class="glass-card" style="margin:0 20px; text-align:center;">
+                <div style="font-size:0.8rem; color:#aaa;">الرصيد الكلي</div>
+                <div class="balance-usd">$<span id="u-usd">0.00</span></div>
+                <div class="points-tag"><i class="ri-coin-fill"></i> <span id="u-pts">0</span></div>
+                <div style="font-size:0.7rem; color:#aaa; margin-top:5px;">سعر الصرف: <span id="rate-disp">1000</span> نقطة = $1</div>
+                
+                <div style="margin-top:15px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <button onclick="convert()" class="btn btn-outline" style="padding:8px; font-size:0.8rem;">تحويل</button>
+                    <button onclick="nav('withdraw')" class="btn btn-primary" style="padding:8px; font-size:0.8rem;">سحب</button>
                 </div>
             </div>
 
-            <div class="balance-card glass-card">
-                <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">رصيدك الحالي</div>
-                <div class="balance-usd">$<span id="usd-balance">0.00</span></div>
-                <div class="points-tag">
-                    <i class="ri-coin-fill"></i> <span id="points-balance">0</span> نقطة
-                </div>
-                <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <button onclick="convertPoints()" class="btn btn-outline" style="padding: 8px; font-size: 0.8rem;">💱 تحويل</button>
-                    <button onclick="nav('withdraw')" class="btn btn-primary" style="padding: 8px; font-size: 0.8rem;">💸 سحب</button>
-                </div>
-            </div>
-
-            <!-- Ticker -->
-            <div class="ticker-wrap">
-                <div class="ticker">
-                    <div class="ticker-item">أحمد سحب <span>$5.00</span> عبر PayPal</div>
-                    <div class="ticker-item">سارة ربحت <span>500 نقطة</span> من الألعاب</div>
-                    <div class="ticker-item">محمد سحب <span>$10.00</span> عبر Vodafone</div>
-                    <div class="ticker-item">عمر أكمل <span>مهمة يومية</span></div>
-                    <div class="ticker-item">علي سحب <span>$2.00</span> عبر USDT</div>
-                </div>
+            <!-- Leaderboard -->
+            <div id="leaderboard-sec" class="hidden glass-card" style="margin:0 20px 15px;">
+                <h4 style="margin-bottom:10px; color:var(--primary);"><i class="ri-trophy-fill"></i> المتصدرين</h4>
+                <div id="leader-list" style="font-size:0.9rem;"></div>
             </div>
 
             <div class="earn-grid">
-                <div class="glass-card earn-card" onclick="earn('game')">
-                    <i class="ri-gamepad-fill earn-icon" style="color: #ff0055;"></i>
+                <div class="glass-card earn-card" onclick="openTasks('game')">
+                    <i class="ri-gamepad-fill earn-icon" style="color:#ff0055;"></i>
                     <h4>ألعاب</h4>
-                    <small style="color: #888;">العب واربح</small>
+                    <small style="color:#888;">العب واربح</small>
                 </div>
-                <div class="glass-card earn-card" onclick="earn('task')">
-                    <i class="ri-todo-fill earn-icon" style="color: #0088ff;"></i>
+                <div class="glass-card earn-card" onclick="openTasks('task')">
+                    <i class="ri-todo-fill earn-icon" style="color:#0088ff;"></i>
                     <h4>مهام</h4>
-                    <small style="color: #888;">سهلة وسريعة</small>
+                    <small style="color:#888;">نفذ واربح</small>
                 </div>
-                <div class="glass-card earn-card" onclick="earn('ad')">
-                    <i class="ri-movie-fill earn-icon" style="color: #ffaa00;"></i>
-                    <h4>فيديو</h4>
-                    <small style="color: #888;">شاهد إعلان</small>
+                <div class="glass-card earn-card" onclick="openWheel()">
+                    <i class="ri-pie-chart-2-fill earn-icon" style="color:#ffaa00;"></i>
+                    <h4>عجلة الحظ</h4>
+                    <small style="color:#888;">جرب حظك</small>
                 </div>
-                <div class="glass-card earn-card" onclick="earn('daily')">
-                    <i class="ri-gift-2-fill earn-icon" style="color: #00ff88;"></i>
+                <div class="glass-card earn-card" onclick="dailyBonus()">
+                    <i class="ri-gift-2-fill earn-icon" style="color:#00ff88;"></i>
                     <h4>يومي</h4>
-                    <small style="color: #888;">هدية دخول</small>
+                    <small style="color:#888;">هدية</small>
                 </div>
             </div>
         </section>
 
-        <!-- صفحة السحب -->
-        <section id="withdraw-page" class="hidden fade-in" style="padding: 20px;">
-            <h2 style="margin-bottom: 20px;">سحب الأرباح</h2>
+        <!-- CONTENT LIST -->
+        <section id="tasks-page" class="hidden fade-in" style="padding:20px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+                <button onclick="nav('home')" style="background:none; border:none; color:white; font-size:1.5rem;"><i class="ri-arrow-right-line"></i></button>
+                <h2>القائمة</h2>
+            </div>
+            <div id="tasks-list"><p style="text-align:center; color:#aaa;">جاري التحميل...</p></div>
+        </section>
+
+        <!-- WITHDRAW & HISTORY (UPDATED) -->
+        <section id="withdraw-page" class="hidden fade-in" style="padding:20px;">
+            <h2 style="margin-bottom:20px;">سحب الأرباح</h2>
             <div class="glass-card">
-                <p style="margin-bottom: 10px;">اختر وسيلة السحب</p>
-                <select id="withdraw-method" class="input-box" style="background: #222;">
-                    <option value="" disabled selected>جاري التحميل...</option>
-                </select>
-                <input type="number" id="withdraw-amount" class="input-box" placeholder="المبلغ ($)">
-                <input type="text" id="withdraw-address" class="input-box" placeholder="رقم المحفظة / الايميل">
-                <button onclick="submitWithdraw()" class="btn btn-primary">إرسال الطلب</button>
+                <select id="w-method" class="input-box" style="background:#222;"><option>loading...</option></select>
+                <input type="number" id="w-amount" class="input-box" placeholder="المبلغ ($)">
+                <input type="text" id="w-addr" class="input-box" placeholder="رقم المحفظة / العنوان">
+                <button onclick="withdraw()" class="btn btn-primary">طلب سحب</button>
             </div>
             
-            <h4 style="margin-top: 30px; margin-bottom: 10px;">سجل العمليات</h4>
-            <div id="withdraw-history">
-                <!-- History Items -->
+            <h4 style="margin-top:30px; margin-bottom:15px; color:var(--text-muted);">سجل العمليات (History)</h4>
+            <div id="w-history" class="history-list">
+                <!-- Items will be injected here with New Design -->
             </div>
         </section>
 
-        <!-- صفحة الدعم -->
-        <section id="support-page" class="hidden fade-in" style="padding: 20px;">
-            <h2 style="margin-bottom: 20px;">الدعم الفني</h2>
-            <div class="glass-card" style="height: 75vh; display: flex; flex-direction: column; padding: 0;">
-                <div style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2);">
-                    <p style="font-size: 0.8rem;">تحدث مع الإدارة مباشرة</p>
-                </div>
-                <div id="chat-messages" class="chat-area">
-                    <div style="text-align: center; color: #555; margin-top: 50px;">
-                        ابدأ المحادثة بإرسال رسالة.<br>سيتم الرد عليك قريباً.
-                    </div>
-                </div>
-                <div style="padding: 10px; display: flex; gap: 10px; background: rgba(0,0,0,0.4);">
-                    <input type="text" id="chat-input" class="input-box" style="margin: 0;" placeholder="اكتب رسالتك...">
-                    <button onclick="sendMessage()" class="btn btn-primary" style="width: auto;"><i class="ri-send-plane-fill"></i></button>
-                </div>
+        <!-- SUPPORT PAGE -->
+        <section id="support-page" class="hidden fade-in" style="padding:20px;">
+            <h2 style="margin-bottom:20px;">الدعم الفني</h2>
+            <div id="chat-box" class="glass-card" style="height:60vh; overflow-y:auto; display:flex; flex-direction:column; gap:10px;"></div>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="chat-input" class="input-box" style="margin:0;" placeholder="اكتب رسالتك...">
+                <button onclick="sendMsg()" class="btn btn-primary" style="width:auto;"><i class="ri-send-plane-fill"></i></button>
             </div>
         </section>
 
-        <!-- صفحة البروفايل -->
-        <section id="profile-page" class="hidden fade-in" style="padding: 20px; text-align: center;">
-            <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--gradient); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 3rem; box-shadow: 0 0 20px rgba(0,255,136,0.3);">👤</div>
-            <h2 id="profile-name">User Name</h2>
-            <p id="profile-email" style="color: var(--text-muted); margin-bottom: 20px;">email@example.com</p>
+        <!-- PROFILE -->
+        <section id="profile-page" class="hidden fade-in" style="padding:20px; text-align:center;">
+            <img id="p-avatar" class="avatar-img" style="width:100px; height:100px; margin:0 auto 15px;" src="">
+            <h2 id="p-name-2" style="display:flex; align-items:center; justify-content:center; gap:5px;">User</h2>
+            
+            <div style="margin:5px auto; display:inline-block; background:rgba(255,255,255,0.1); padding:5px 15px; border-radius:20px; font-size:0.8rem;">
+                <span id="p-country">🌍 Global</span>
+            </div>
 
-            <div class="glass-card" style="text-align: right;">
-                <div style="margin-bottom: 10px; display: flex; justify-content: space-between;">
-                    <span>كود الدعوة</span>
-                    <span id="ref-code" style="color: var(--primary); font-weight: bold; cursor: pointer;" onclick="copyRef()">LOADING</span>
+            <!-- Level System -->
+            <div class="glass-card level-container">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span id="lvl-name" class="level-badge">مبتدئ</span>
+                    <small id="lvl-next">Next: 1000 pts</small>
                 </div>
-                <div style="margin-bottom: 10px; display: flex; justify-content: space-between;">
-                    <span>المستخدمين المدعوين</span>
-                    <span>0</span>
+                <div class="level-bar-bg">
+                    <div id="lvl-bar" class="level-bar-fill"></div>
                 </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span>الحالة</span>
-                    <span id="profile-status" style="color: var(--success);">نشط</span>
+                <p style="text-align:left; font-size:0.7rem; color:#aaa; margin-top:5px;">المستوى الحالي</p>
+            </div>
+
+            <p id="p-email-2" style="color:#aaa; margin-top:10px; margin-bottom:20px;">...</p>
+
+            <div class="glass-card" style="border:1px dashed var(--primary);">
+                <div style="font-size:0.8rem; color:#aaa; margin-bottom:5px;">كود الدعوة الخاص بك</div>
+                <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+                    <span id="ref-code" style="font-size:1.2rem; font-weight:bold; color:var(--primary); letter-spacing:2px;">LOADING</span>
+                    <button onclick="copyRef()" style="background:none; border:none; color:white;"><i class="ri-file-copy-line"></i></button>
                 </div>
             </div>
 
-            <div class="glass-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <span>الوضع المظلم</span>
-                    <i class="ri-moon-fill"></i>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>اللغة / Language</span>
-                    <span>AR</span>
-                </div>
-            </div>
-
-            <button onclick="logout()" class="btn btn-outline" style="border-color: var(--danger); color: var(--danger); margin-bottom: 50px;">تسجيل خروج</button>
-            <p style="color: #555; font-size: 0.7rem;">Flux Cash v1.0.0<br>Developed by Ibrahim</p>
+            <button onclick="auth.signOut()" class="btn btn-outline" style="border-color:var(--danger); color:var(--danger);">تسجيل خروج</button>
         </section>
 
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- GAME OVERLAY -->
+    <div id="game-overlay" class="hidden">
+        <div id="game-header">
+            <span id="game-timer">00:00</span>
+            <button onclick="closeGame()" style="background:var(--danger); border:none; color:white; padding:5px 10px; border-radius:5px;">إلغاء</button>
+        </div>
+        <iframe id="game-frame"></iframe>
+        <div id="claim-area" class="hidden" style="position:absolute; bottom:50px; width:100%; text-align:center;">
+            <button onclick="claimReward()" class="btn btn-primary" style="width:80%;">استلام المكافأة</button>
+        </div>
+    </div>
+
+    <!-- WHEEL OVERLAY -->
+    <div id="wheel-overlay" class="hidden">
+        <h2 style="color:white; margin-bottom:20px;">جرب حظك!</h2>
+        <div style="position:relative;">
+            <div class="wheel-pointer"></div>
+            <div class="wheel-container" id="wheel">
+                <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:conic-gradient(#ff0055 0deg 90deg, #0088ff 90deg 180deg, #ffaa00 180deg 270deg, #00ff88 270deg 360deg);"></div>
+            </div>
+        </div>
+        <button onclick="spinWheel()" class="btn btn-primary" style="width:200px; margin-top:30px;" id="spin-btn">دوران</button>
+        <button onclick="document.getElementById('wheel-overlay').classList.add('hidden')" style="background:none; border:none; color:#aaa; margin-top:20px; text-decoration:underline;">إغلاق</button>
+    </div>
+
     <nav class="bottom-nav hidden" id="navbar">
         <div class="nav-item active" onclick="nav('home')"><i class="ri-home-5-line"></i><span>الرئيسية</span></div>
         <div class="nav-item" onclick="nav('withdraw')"><i class="ri-wallet-3-line"></i><span>سحب</span></div>
@@ -327,8 +336,6 @@
     </nav>
 
     <script>
-        // --- 1. إعدادات Firebase ---
-        // نفس الإعدادات الموجودة في ملف الأدمن لضمان الربط
         const firebaseConfig = {
             apiKey: "AIzaSyDYcs_MasNecH2TgY1hPnYVb5Npp2mVSeE",
             authDomain: "fluxcash-2261d.firebaseapp.com",
@@ -343,327 +350,279 @@
         const auth = firebase.auth();
         const db = firebase.database();
 
-        // --- 2. متغيرات الحالة ---
         let currentUser = null;
         let userData = {};
-        let isLoginMode = true;
-        let currentSlide = 1;
-        
-        // --- 3. التهيئة والـ Splash ---
-        window.onload = () => {
-            // التحقق من Onboarding
-            const seenOnboarding = localStorage.getItem('seenOnboarding');
-            
-            setTimeout(() => {
-                document.getElementById('splash').classList.add('hidden');
-                
-                auth.onAuthStateChanged(user => {
-                    if (user) {
-                        currentUser = user;
-                        initApp();
-                    } else {
-                        if (!seenOnboarding) {
-                            document.getElementById('onboarding').classList.remove('hidden');
-                        } else {
-                            document.getElementById('auth').classList.remove('hidden');
-                        }
-                    }
-                });
-            }, 2500);
-        };
+        let settings = {};
+        let isLogin = true;
+        let activeTask = null;
+        let timerInt = null;
 
-        // --- 4. منطق Onboarding ---
-        function nextSlide() {
-            document.getElementById(`slide${currentSlide}`).classList.remove('active');
-            document.querySelectorAll('.dot')[currentSlide-1].classList.remove('active');
-            
-            currentSlide++;
-            
-            if (currentSlide > 3) {
-                skipOnboarding();
-                return;
-            }
-            
-            document.getElementById(`slide${currentSlide}`).classList.add('active');
-            document.querySelectorAll('.dot')[currentSlide-1].classList.add('active');
-            
-            if(currentSlide === 3) document.getElementById('onboard-btn').textContent = "ابدأ الآن";
-        }
-
-        function skipOnboarding() {
-            localStorage.setItem('seenOnboarding', 'true');
-            document.getElementById('onboarding').classList.add('hidden');
-            document.getElementById('auth').classList.remove('hidden');
-        }
-
-        // --- 5. منطق التسجيل (Auth) ---
-        function toggleAuthMode() {
-            isLoginMode = !isLoginMode;
-            document.getElementById('register-fields').classList.toggle('hidden', isLoginMode);
-            document.getElementById('auth-btn').textContent = isLoginMode ? "تسجيل الدخول" : "إنشاء حساب";
-            document.getElementById('auth-switch-text').textContent = isLoginMode ? "ليس لديك حساب؟" : "لديك حساب بالفعل؟";
-        }
-
-        function handleAuth() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            const btn = document.getElementById('auth-btn');
-
-            if(!email || !pass) return showToast("أدخل البيانات كاملة");
-
-            btn.textContent = "جار المعالجة...";
-
-            if (isLoginMode) {
-                auth.signInWithEmailAndPassword(email, pass).catch(e => {
-                    showToast(e.message);
-                    btn.textContent = "تسجيل الدخول";
-                });
+        // Init
+        auth.onAuthStateChanged(u => {
+            if(u) {
+                currentUser = u;
+                document.getElementById('auth').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                document.getElementById('navbar').classList.remove('hidden');
+                initApp();
             } else {
-                const name = document.getElementById('reg-name').value;
-                if(!name) return showToast("أدخل اسم المستخدم");
-                
-                auth.createUserWithEmailAndPassword(email, pass).then(cred => {
+                document.getElementById('auth').classList.remove('hidden');
+            }
+        });
+
+        // Auth
+        function toggleAuth() {
+            isLogin = !isLogin;
+            document.getElementById('reg-name').classList.toggle('hidden', isLogin);
+            document.getElementById('auth-btn').textContent = isLogin ? "دخول" : "تسجيل";
+        }
+        function handleAuth() {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('pass').value;
+            const n = document.getElementById('reg-name').value;
+            if(isLogin) {
+                auth.signInWithEmailAndPassword(e, p).catch(alert);
+            } else {
+                if(!n) return alert("الاسم مطلوب");
+                auth.createUserWithEmailAndPassword(e, p).then(c => {
                     const refCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-                    db.ref('users/' + cred.user.uid).set({
-                        username: name,
-                        email: email,
-                        points: 0,
-                        balance: 0.00,
-                        refCode: refCode,
-                        joined: new Date().toISOString()
+                    const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${n}`;
+                    db.ref('users/'+c.user.uid).set({
+                        username:n, email:e, points:0, balance:0, 
+                        refCode: refCode, avatar: avatar, country: "🌍 Global",
+                        joined:new Date().toISOString()
                     });
-                }).catch(e => {
-                    showToast(e.message);
-                    btn.textContent = "إنشاء حساب";
-                });
+                }).catch(alert);
             }
         }
 
-        function logout() {
-            auth.signOut().then(() => location.reload());
-        }
-
-        // --- 6. منطق التطبيق الرئيسي ---
         function initApp() {
-            document.getElementById('auth').classList.add('hidden');
-            document.getElementById('onboarding').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-            document.getElementById('navbar').classList.remove('hidden');
-
-            // مراقبة بيانات المستخدم
-            db.ref('users/' + currentUser.uid).on('value', snap => {
-                userData = snap.val();
-                if(!userData) return;
-
-                document.getElementById('display-name').textContent = userData.username;
-                document.getElementById('profile-name').textContent = userData.username;
-                document.getElementById('profile-email').textContent = userData.email;
-                document.getElementById('usd-balance').textContent = userData.balance.toFixed(2);
-                document.getElementById('points-balance').textContent = userData.points;
-                document.getElementById('ref-code').textContent = userData.refCode;
-                
-                if(userData.isVerified) {
-                    document.getElementById('profile-status').innerHTML = 'موثق <i class="ri-checkbox-circle-fill" style="color:#1da1f2"></i>';
+            // Listen to Settings
+            db.ref('settings').on('value', s => {
+                settings = s.val() || {};
+                if(settings.maintenance) document.getElementById('maint-screen').classList.remove('hidden');
+                else document.getElementById('maint-screen').classList.add('hidden');
+                document.getElementById('rate-disp').textContent = settings.exchangeRate || 1000;
+                if(settings.flashEvent?.active && !sessionStorage.getItem('flashSeen')) {
+                    document.getElementById('flash-img-src').src = settings.flashEvent.image;
+                    document.getElementById('flash-popup').classList.remove('hidden');
+                    sessionStorage.setItem('flashSeen', 'true');
                 }
+                if(settings.leaderboard) {
+                    document.getElementById('leaderboard-sec').classList.remove('hidden');
+                    loadLeaderboard();
+                } else document.getElementById('leaderboard-sec').classList.add('hidden');
             });
 
-            // تحميل طرق السحب
-            loadWithdrawMethods();
-            
-            // تحميل الرسائل
-            loadMessages();
-        }
+            // User Data
+            db.ref('users/'+currentUser.uid).on('value', s => {
+                userData = s.val();
+                if(userData.isBanned) { document.getElementById('ban-screen').classList.remove('hidden'); return; }
+                else { document.getElementById('ban-screen').classList.add('hidden'); }
 
-        // --- 7. التنقل ---
-        function nav(page) {
-            document.querySelectorAll('section').forEach(el => el.classList.add('hidden'));
-            document.getElementById(page + '-page').classList.remove('hidden');
-            
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
+                document.getElementById('u-name').textContent = userData.username;
+                let verHtml = userData.isVerified ? ' <i class="ri-checkbox-circle-fill" style="color:#1da1f2;"></i>' : '';
+                document.getElementById('p-name-2').innerHTML = userData.username + verHtml;
+                document.getElementById('p-email-2').textContent = userData.email;
+                document.getElementById('u-usd').textContent = userData.balance.toFixed(2);
+                document.getElementById('u-pts').textContent = userData.points;
+                document.getElementById('p-country').textContent = userData.country || "🌍 Global";
+                document.getElementById('ref-code').textContent = userData.refCode || "---";
+                document.getElementById('u-avatar-small').src = userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username}`;
+                document.getElementById('p-avatar').src = userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username}`;
+                if(userData.isVerified) document.getElementById('ver-badge').innerHTML = '<i class="ri-checkbox-circle-fill" style="color:#1da1f2"></i>';
+                updateLevel(userData.points);
+            });
 
-        // --- 8. الكسب والتحويل ---
-        function earn(type) {
-            let pts = 0;
-            let msg = "";
+            // Alerts & Notifications
+            db.ref('system_alerts').limitToLast(1).on('child_added', s => {
+                const a = s.val();
+                if(Date.now() - a.timestamp < 10000) { 
+                    const div = document.createElement('div');
+                    div.className = `broadcast-msg bc-${a.position}`;
+                    div.style.borderColor = a.type === 'warning' ? 'yellow' : (a.type==='success'?'green':'#0088ff');
+                    div.innerText = a.message;
+                    document.body.appendChild(div);
+                    setTimeout(() => div.remove(), (a.duration || 5) * 1000);
+                }
+            });
+            db.ref('users/'+currentUser.uid+'/notifications').on('child_added', s => {
+                const n = s.val();
+                const div = document.createElement('div');
+                div.className = 'glass-card';
+                div.style.border = '1px solid var(--secondary)';
+                div.innerHTML = `🔔 <b>تنبيه خاص:</b> ${n.msg}`;
+                document.getElementById('private-notifs').prepend(div);
+            });
             
-            // محاكاة تأخير الشبكة
-            document.body.style.cursor = 'wait';
-            
-            setTimeout(() => {
-                if(type === 'game') { pts = 50; msg = "+50 نقطة (لعبة)"; }
-                if(type === 'task') { pts = 100; msg = "+100 نقطة (مهمة)"; }
-                if(type === 'ad') { pts = 20; msg = "+20 نقطة (فيديو)"; }
-                if(type === 'daily') { pts = 200; msg = "+200 نقطة (مكافأة)"; }
+            // Payments
+            db.ref('payment_methods').on('value', s => {
+                const sel = document.getElementById('w-method');
+                sel.innerHTML = '';
+                s.forEach(c => sel.innerHTML += `<option value="${c.val().name}">${c.val().name}</option>`);
+            });
 
-                db.ref('users/' + currentUser.uid).update({
-                    points: (userData.points || 0) + pts
-                });
-                showToast(msg);
-                document.body.style.cursor = 'default';
-            }, 1000);
-        }
-
-        function convertPoints() {
-            // جلب سعر التحويل من الإعدادات العامة (التي وضعها الأدمن)
-            db.ref('settings/rate').once('value', snap => {
-                const rate = snap.val() || 1000;
+            // --- HISTORY (UPDATED WITH DESIGN) ---
+            db.ref('withdrawals').orderByChild('userId').equalTo(currentUser.uid).on('value', s => {
+                const d = document.getElementById('w-history');
+                d.innerHTML = '';
+                // Reverse to show newest first
+                let arr = [];
+                s.forEach(c => arr.push(c.val()));
                 
-                if (userData.points < rate) {
-                    showToast(`تحتاج ${rate} نقطة على الأقل للتحويل`);
+                if(arr.length === 0) {
+                    d.innerHTML = '<p style="text-align:center; color:#555;">لا يوجد عمليات سابقة</p>';
                     return;
                 }
 
-                const newPoints = userData.points - rate;
-                const newBalance = userData.balance + 1;
-
-                db.ref('users/' + currentUser.uid).update({
-                    points: newPoints,
-                    balance: newBalance
-                });
-                showToast("تم تحويل النقاط إلى $1.00");
-            });
-        }
-
-        // --- 9. السحب ---
-        function loadWithdrawMethods() {
-            db.ref('payment_methods').on('value', snap => {
-                const select = document.getElementById('withdraw-method');
-                select.innerHTML = '<option value="" disabled selected>اختر وسيلة...</option>';
-                snap.forEach(c => {
-                    const m = c.val();
-                    select.innerHTML += `<option value="${m.name}">${m.name} (Min: $${m.min})</option>`;
-                });
-            });
-
-            // تحميل سجل السحب
-            db.ref('withdrawals').orderByChild('userId').equalTo(currentUser.uid).on('value', snap => {
-                const list = document.getElementById('withdraw-history');
-                list.innerHTML = '';
-                snap.forEach(c => {
-                    const w = c.val();
-                    const statusColor = w.status === 'pending' ? 'orange' : (w.status === 'approved' ? 'var(--success)' : 'red');
-                    const statusText = w.status === 'pending' ? 'قيد المراجعة' : (w.status === 'approved' ? 'مقبول' : 'مرفوض');
+                arr.reverse().forEach(w => {
+                    // Determine styling based on status
+                    let stClass = 'st-pending';
+                    let stText = 'قيد المعالجة ⏳';
                     
-                    list.innerHTML += `
-                        <div class="glass-card" style="padding:10px; margin-bottom:10px;">
-                            <div style="display:flex; justify-content:space-between;">
-                                <span>${w.method}</span>
-                                <b>$${w.amount}</b>
-                            </div>
-                            <div style="font-size:0.8rem; color:#aaa; display:flex; justify-content:space-between;">
-                                <span>${new Date(w.date).toLocaleDateString()}</span>
-                                <span style="color:${statusColor}">${statusText}</span>
-                            </div>
+                    if(w.status === 'approved') {
+                        stClass = 'st-approved';
+                        stText = 'تم الدفع ✅';
+                    } else if (w.status === 'rejected') {
+                        stClass = 'st-rejected';
+                        stText = 'مرفوض ❌';
+                    }
+
+                    // Format Date (Simple)
+                    let dateStr = "اليوم";
+                    
+                    d.innerHTML += `
+                    <div class="h-item fade-in">
+                        <div class="h-left">
+                            <h4><i class="ri-bank-card-2-line"></i> ${w.method}</h4>
+                            <span>${w.address}</span>
+                            <div class="st-badge ${stClass}">${stText}</div>
                         </div>
-                    `;
+                        <div class="h-right">
+                            <div class="h-amount">$${w.amount}</div>
+                        </div>
+                    </div>`;
+                });
+            });
+
+            loadChat();
+        }
+
+        // Feature Logic
+        function updateLevel(pts) {
+            let level = "مبتدئ", next = 1000, percent = 0;
+            if(pts < 1000) { level="مبتدئ"; next=1000; percent=(pts/1000)*100; }
+            else if(pts < 5000) { level="محترف"; next=5000; percent=((pts-1000)/4000)*100; }
+            else if(pts < 20000) { level="خبير"; next=20000; percent=((pts-5000)/15000)*100; }
+            else { level="أسطورة"; next="Max"; percent=100; }
+            document.getElementById('lvl-name').textContent = level;
+            document.getElementById('lvl-next').textContent = next === "Max" ? "MAX LEVEL" : `التالي: ${next}`;
+            document.getElementById('lvl-bar').style.width = percent + "%";
+        }
+        function loadLeaderboard() {
+            db.ref('users').orderByChild('points').limitToLast(5).once('value', s => {
+                let h = '', arr = [];
+                s.forEach(c => arr.push(c.val()));
+                arr.reverse().forEach((u, i) => h += `<div class="leader-item"><span>#${i+1} ${u.username}</span><span>${u.points} pts</span></div>`);
+                document.getElementById('leader-list').innerHTML = h;
+            });
+        }
+        function openTasks(cat) {
+            nav('tasks');
+            const list = document.getElementById('tasks-list');
+            list.innerHTML = '<p style="text-align:center; color:#aaa;">جاري جلب البيانات...</p>';
+            db.ref('tasks').orderByChild('category').equalTo(cat).once('value', s => {
+                list.innerHTML = '';
+                if(s.numChildren() === 0) { list.innerHTML = '<p style="text-align:center;">لا توجد عناصر حالياً</p>'; return; }
+                s.forEach(c => {
+                    let t = c.val();
+                    list.innerHTML += `
+                    <div class="task-item">
+                        <div><div style="font-weight:bold;">${t.title}</div><div style="font-size:0.8rem; color:#aaa;">⏱ ${t.time}s</div></div>
+                        <div><span style="color:var(--primary); font-weight:bold; margin-left:10px;">+${t.points}</span><button onclick="startGame('${c.key}', '${t.type}', '${t.content}', ${t.time}, ${t.points})" class="task-btn">ابدأ</button></div>
+                    </div>`;
                 });
             });
         }
-
-        function submitWithdraw() {
-            const amount = parseFloat(document.getElementById('withdraw-amount').value);
-            const method = document.getElementById('withdraw-method').value;
-            const address = document.getElementById('withdraw-address').value;
-
-            if(!amount || !method || !address) return showToast("أكمل جميع الحقول");
-            if(amount > userData.balance) return showToast("رصيدك غير كافٍ");
-
-            db.ref('users/' + currentUser.uid).update({ balance: userData.balance - amount });
-            db.ref('withdrawals').push({
-                userId: currentUser.uid,
-                username: userData.username,
-                amount: amount,
-                method: method,
-                address: address,
-                status: 'pending',
-                date: new Date().toISOString()
-            });
-            showToast("تم إرسال الطلب بنجاح");
-            nav('home');
+        function startGame(id, type, content, time, points) {
+            activeTask = { id, points };
+            document.getElementById('game-overlay').classList.remove('hidden');
+            document.getElementById('claim-area').classList.add('hidden');
+            if(type === 'html') {
+                const f = document.getElementById('game-frame'); f.style.display = 'block';
+                f.contentWindow.document.open(); f.contentWindow.document.write(content); f.contentWindow.document.close();
+            } else {
+                document.getElementById('game-frame').style.display = 'none'; window.open(content, '_blank');
+            }
+            let left = time;
+            document.getElementById('game-timer').textContent = left;
+            if(timerInt) clearInterval(timerInt);
+            timerInt = setInterval(() => {
+                left--; document.getElementById('game-timer').textContent = left;
+                if(left <= 0) { clearInterval(timerInt); document.getElementById('game-timer').textContent = "مكتمل!"; document.getElementById('claim-area').classList.remove('hidden'); }
+            }, 1000);
         }
-
-        // --- 10. الدعم الفني ---
-        let supportTicketId = null;
-
-        function loadMessages() {
-            // نبحث إذا كان لدى المستخدم تذكرة مفتوحة
-            db.ref('support_tickets').orderByChild('userId').equalTo(currentUser.uid).on('value', snap => {
-                const area = document.getElementById('chat-messages');
-                area.innerHTML = '';
-                let hasTicket = false;
-
-                snap.forEach(c => {
-                    const t = c.val();
-                    if(t.status === 'open') {
-                        hasTicket = true;
-                        supportTicketId = c.key;
-                        
-                        // تحميل رسائل هذه التذكرة
-                        const msgs = t.messages || {};
-                        Object.values(msgs).forEach(m => {
-                            const cls = m.sender === 'user' ? 'msg-me' : 'msg-admin';
-                            area.innerHTML += `<div class="msg ${cls}">${m.text}</div>`;
-                        });
+        function claimReward() {
+            if(activeTask) {
+                let finalPts = settings.happyHour ? activeTask.points * 2 : activeTask.points;
+                db.ref('users/'+currentUser.uid).update({points: (userData.points||0)+finalPts});
+                showToast(`+${finalPts} نقطة`);
+                closeGame();
+            }
+        }
+        function closeGame() { document.getElementById('game-overlay').classList.add('hidden'); document.getElementById('game-frame').src = 'about:blank'; if(timerInt) clearInterval(timerInt); activeTask = null; }
+        function openWheel() { document.getElementById('wheel-overlay').classList.remove('hidden'); }
+        function spinWheel() {
+            const btn = document.getElementById('spin-btn'); btn.disabled = true;
+            document.getElementById('wheel').style.transform = `rotate(${Math.floor(1000 + Math.random() * 3000)}deg)`;
+            setTimeout(() => {
+                const prizes = (settings.wheelPrizes || "10,20,50,0,100").split(',');
+                const prize = parseInt(prizes[Math.floor(Math.random()*prizes.length)]);
+                db.ref('users/'+currentUser.uid).update({points: (userData.points||0)+prize});
+                showToast(`مبروك! ربحت ${prize} نقطة`);
+                btn.disabled = false;
+                setTimeout(() => document.getElementById('wheel-overlay').classList.add('hidden'), 2000);
+            }, 5000);
+        }
+        function loadChat() {
+            db.ref('support_tickets').orderByChild('userId').equalTo(currentUser.uid).on('value', s => {
+                const b = document.getElementById('chat-box'); b.innerHTML = '';
+                s.forEach(c => {
+                    if(c.val().status === 'open') {
+                        ticketId = c.key;
+                        const msgs = c.val().messages || {};
+                        Object.values(msgs).forEach(m => b.innerHTML += `<div class="msg ${m.sender==='user'?'msg-me':'msg-admin'}">${m.text}</div>`);
+                        b.scrollTop = b.scrollHeight;
                     }
                 });
-                
-                if(!hasTicket) {
-                    area.innerHTML = '<div style="text-align:center; color:#777; margin-top:50px;">لا توجد محادثات نشطة.<br>أرسل رسالة لفتح تذكرة جديدة.</div>';
-                    supportTicketId = null;
-                }
-                
-                area.scrollTop = area.scrollHeight;
             });
         }
-
-        function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            if(!text) return;
-
-            if(!supportTicketId) {
-                // إنشاء تذكرة جديدة
-                const newTicket = db.ref('support_tickets').push();
-                newTicket.set({
-                    userId: currentUser.uid,
-                    username: userData.username,
-                    subject: 'New Message',
-                    status: 'open',
-                    lastMsg: text,
-                    messages: {}
-                }).then(() => {
-                    supportTicketId = newTicket.key;
-                    pushMsg(text);
-                });
-            } else {
-                pushMsg(text);
-            }
-            input.value = '';
+        function sendMsg() {
+            const v = document.getElementById('chat-input').value; if(!v) return;
+            if(!ticketId) db.ref('support_tickets').push({userId:currentUser.uid, username:userData.username, status:'open', lastMsg:v}).then(r=>{ticketId=r.key; pm(v);});
+            else pm(v);
+            document.getElementById('chat-input').value = '';
         }
-
-        function pushMsg(text) {
-            db.ref(`support_tickets/${supportTicketId}/messages`).push({
-                text: text,
-                sender: 'user',
-                date: new Date().toISOString()
-            });
-            db.ref(`support_tickets/${supportTicketId}`).update({ lastMsg: text });
+        function pm(t) { db.ref('support_tickets/'+ticketId+'/messages').push({text:t, sender:'user'}); }
+        function nav(p) { document.querySelectorAll('section').forEach(s => s.classList.add('hidden')); document.getElementById(p+'-page').classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); }
+        function dailyBonus() { let pts = settings.dailyBonus || 50; db.ref('users/'+currentUser.uid).update({points: (userData.points||0)+pts}); showToast(`مكافأة يومية +${pts}`); }
+        function convert() {
+            let rate = settings.exchangeRate || 1000;
+            if(userData.points < rate) return showToast(`تحتاج ${rate} نقطة`);
+            db.ref('users/'+currentUser.uid).update({points: userData.points-rate, balance: userData.balance+1});
+            showToast("تم التحويل");
         }
-
-        // --- 11. أدوات مساعدة ---
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            document.getElementById('toast-msg').textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+        function withdraw() {
+            const a = parseFloat(document.getElementById('w-amount').value);
+            const m = document.getElementById('w-method').value;
+            const ad = document.getElementById('w-addr').value;
+            if(a > userData.balance) return showToast("رصيد غير كاف");
+            db.ref('users/'+currentUser.uid).update({balance: userData.balance-a});
+            db.ref('withdrawals').push({userId:currentUser.uid, username:userData.username, amount:a, method:m, address:ad, status:'pending'});
+            showToast("تم الطلب");
         }
-
-        function copyRef() {
-            navigator.clipboard.writeText(userData.refCode);
-            showToast("تم نسخ كود الدعوة");
-        }
+        function copyRef() { navigator.clipboard.writeText(userData.refCode); showToast("تم النسخ"); }
+        function showToast(m) { const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
     </script>
 </body>
 </html>
