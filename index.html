@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Flux Cash - User Ultimate</title>
+    <title>Flux Cash - User</title>
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -54,10 +54,21 @@
         .task-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 15px; border-radius: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
         .task-btn { background: var(--secondary); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
 
-        /* FIXED GAME OVERLAY */
+        /* FIXED GAME OVERLAY & HEADER */
         #game-overlay { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; }
-        #game-header { padding: 15px; background: #111; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; height: 60px; }
-        #game-timer { background: var(--primary); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 1.1rem; }
+        #game-header { 
+            padding: 10px 20px; 
+            background: rgba(10,10,10,0.95); 
+            border-bottom: 1px solid var(--primary); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            height: 70px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+        #game-info { display: flex; flex-direction: column; }
+        #game-timer { color: var(--primary); font-weight: bold; font-size: 1.2rem; font-family: monospace; }
+        #game-reward-display { font-size: 0.8rem; color: #fff; }
         #game-frame { flex: 1; border: none; width: 100%; background: #fff; }
 
         /* Wheel Overlay */
@@ -66,7 +77,7 @@
         .wheel-section { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; left: 0; top: 0; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
         .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--danger); z-index: 10; }
 
-        /* Support Chat CSS */
+        /* Chat */
         .msg { padding: 8px 12px; border-radius: 10px; margin-bottom: 8px; max-width: 80%; width: fit-content; font-size: 0.9rem; }
         .msg-me { align-self: flex-end; background: var(--gradient); color: white; margin-right: 0; margin-left: auto; }
         .msg-admin { align-self: flex-start; background: #333; color: white; margin-left: 0; margin-right: auto; }
@@ -77,7 +88,7 @@
         .bc-top { top: 20px; } .bc-bottom { bottom: 90px; } .bc-center { top: 50%; transform: translateY(-50%); }
         @keyframes popIn { from{transform:translateY(-20px);opacity:0} to{transform:translateY(0);opacity:1} }
 
-        /* Level Progress Bar */
+        /* Level */
         .level-container { margin-top: 20px; text-align: right; }
         .level-bar-bg { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 5px; }
         .level-bar-fill { height: 100%; background: var(--gradient); width: 0%; transition: 1s; }
@@ -97,26 +108,23 @@
 
     <div id="toast"><i class="ri-checkbox-circle-fill" style="color:var(--primary)"></i> <span id="toast-msg">تم بنجاح</span></div>
 
-    <!-- Maintenance Screen -->
+    <!-- Maintenance -->
     <div id="maint-screen" class="hidden" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
         <i class="ri-tools-fill" style="font-size:5rem;color:var(--primary);margin-bottom:20px;"></i>
         <h2 style="color:white;">التطبيق في وضع الصيانة</h2>
-        <p style="color:#aaa;">نعود قريباً بتحديثات جديدة!</p>
     </div>
 
-    <!-- Ban Screen -->
+    <!-- Ban -->
     <div id="ban-screen" class="hidden" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
         <i class="ri-prohibited-line" style="font-size:5rem;color:var(--danger);margin-bottom:20px;"></i>
         <h2 style="color:var(--danger);">تم حظر حسابك</h2>
-        <p style="color:#aaa;">تم إيقاف حسابك بسبب مخالفة الشروط.</p>
-        <button onclick="nav('support'); document.getElementById('ban-screen').classList.add('hidden');" class="btn btn-outline" style="width:auto; margin-top:20px;">تواصل مع الدعم</button>
     </div>
 
-    <!-- Flash Event Popup -->
+    <!-- Flash Popup -->
     <div id="flash-popup" class="hidden" onclick="this.classList.add('hidden')">
         <div style="position:relative; width:90%; max-width:350px;">
-            <button style="position:absolute;top:-15px;right:-15px;background:red;color:white;border:none;border-radius:50%;width:30px;height:30px;font-weight:bold;">X</button>
-            <img id="flash-img-src" src="" style="width:100%; border-radius:15px; border:2px solid var(--primary); box-shadow: 0 0 30px var(--primary-glow);">
+            <button style="position:absolute;top:-15px;right:-15px;background:red;color:white;border:none;border-radius:50%;width:30px;height:30px;">X</button>
+            <img id="flash-img-src" src="" style="width:100%; border-radius:15px; border:2px solid var(--primary);">
         </div>
     </div>
 
@@ -147,7 +155,6 @@
                 </div>
             </div>
 
-            <!-- Notifications -->
             <div id="private-notifs" style="padding:0 20px;"></div>
             <div id="broadcast-area"></div>
 
@@ -163,43 +170,26 @@
                 </div>
             </div>
 
-            <!-- Leaderboard -->
             <div id="leaderboard-sec" class="hidden glass-card" style="margin:0 20px 15px;">
                 <h4 style="margin-bottom:10px; color:var(--primary);"><i class="ri-trophy-fill"></i> المتصدرين</h4>
                 <div id="leader-list" style="font-size:0.9rem;"></div>
             </div>
 
             <div class="earn-grid">
-                <div class="glass-card earn-card" onclick="openTasks('game')">
-                    <i class="ri-gamepad-fill earn-icon" style="color:#ff0055;"></i>
-                    <h4>ألعاب</h4>
-                    <small style="color:#888;">العب واربح</small>
-                </div>
-                <div class="glass-card earn-card" onclick="openTasks('task')">
-                    <i class="ri-todo-fill earn-icon" style="color:#0088ff;"></i>
-                    <h4>مهام</h4>
-                    <small style="color:#888;">نفذ واربح</small>
-                </div>
-                <div class="glass-card earn-card" onclick="openWheel()">
-                    <i class="ri-pie-chart-2-fill earn-icon" style="color:#ffaa00;"></i>
-                    <h4>عجلة الحظ</h4>
-                    <small style="color:#888;">جرب حظك</small>
-                </div>
-                <div class="glass-card earn-card" onclick="dailyBonus()">
-                    <i class="ri-gift-2-fill earn-icon" style="color:#00ff88;"></i>
-                    <h4>يومي</h4>
-                    <small style="color:#888;">هدية</small>
-                </div>
+                <div class="glass-card earn-card" onclick="openTasks('game')"><i class="ri-gamepad-fill earn-icon" style="color:#ff0055;"></i><h4>ألعاب</h4></div>
+                <div class="glass-card earn-card" onclick="openTasks('task')"><i class="ri-todo-fill earn-icon" style="color:#0088ff;"></i><h4>مهام</h4></div>
+                <div class="glass-card earn-card" onclick="openWheel()"><i class="ri-pie-chart-2-fill earn-icon" style="color:#ffaa00;"></i><h4>عجلة الحظ</h4></div>
+                <div class="glass-card earn-card" onclick="dailyBonus()"><i class="ri-gift-2-fill earn-icon" style="color:#00ff88;"></i><h4>يومي</h4></div>
             </div>
         </section>
 
-        <!-- CONTENT LIST -->
+        <!-- LIST -->
         <section id="tasks-page" class="hidden fade-in" style="padding:20px;">
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
                 <button onclick="nav('home')" style="background:none; border:none; color:white; font-size:1.5rem;"><i class="ri-arrow-right-line"></i></button>
                 <h2>القائمة</h2>
             </div>
-            <div id="tasks-list"><p style="text-align:center; color:#aaa;">جاري التحميل...</p></div>
+            <div id="tasks-list"></div>
         </section>
 
         <!-- WITHDRAW -->
@@ -228,62 +218,40 @@
         <section id="profile-page" class="hidden fade-in" style="padding:20px; text-align:center;">
             <img id="p-avatar" class="avatar-img" style="width:100px; height:100px; margin:0 auto 15px;" src="">
             <h2 id="p-name-2">User</h2>
-            
-            <div style="margin:5px auto; display:inline-block; background:rgba(255,255,255,0.1); padding:5px 15px; border-radius:20px; font-size:0.8rem;">
-                <span id="p-country">🌍 Global</span>
-            </div>
-
+            <div style="margin:5px auto; display:inline-block; background:rgba(255,255,255,0.1); padding:5px 15px; border-radius:20px; font-size:0.8rem;"><span id="p-country">🌍 Global</span></div>
             <div class="glass-card level-container">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span id="lvl-name" class="level-badge">مبتدئ</span>
-                    <small id="lvl-next">Next: 1000 pts</small>
-                </div>
-                <div class="level-bar-bg">
-                    <div id="lvl-bar" class="level-bar-fill"></div>
-                </div>
-                <p style="text-align:left; font-size:0.7rem; color:#aaa; margin-top:5px;">المستوى الحالي</p>
+                <div style="display:flex; justify-content:space-between;"><span id="lvl-name" class="level-badge">مبتدئ</span><small id="lvl-next">...</small></div>
+                <div class="level-bar-bg"><div id="lvl-bar" class="level-bar-fill"></div></div>
             </div>
-
             <p id="p-email-2" style="color:#aaa; margin-top:10px; margin-bottom:20px;">...</p>
-
-            <div class="glass-card" style="border:1px dashed var(--primary);">
-                <div style="font-size:0.8rem; color:#aaa; margin-bottom:5px;">كود الدعوة الخاص بك</div>
-                <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-                    <span id="ref-code" style="font-size:1.2rem; font-weight:bold; color:var(--primary); letter-spacing:2px;">LOADING</span>
-                    <button onclick="copyRef()" style="background:none; border:none; color:white;"><i class="ri-file-copy-line"></i></button>
-                </div>
+            <div class="glass-card" style="border:1px dashed var(--primary); margin-top:10px;">
+                <div style="font-size:0.8rem; color:#aaa;">كود الدعوة</div>
+                <span id="ref-code" style="font-size:1.2rem; font-weight:bold; color:var(--primary); letter-spacing:2px;">LOADING</span>
             </div>
-
-            <button onclick="auth.signOut()" class="btn btn-outline" style="border-color:var(--danger); color:var(--danger);">تسجيل خروج</button>
+            <button onclick="auth.signOut()" class="btn btn-outline" style="border-color:var(--danger); color:var(--danger); margin-top:20px;">خروج</button>
         </section>
 
     </div>
 
-    <!-- GAME OVERLAY (FIXED: Supports both HTML and Links) -->
+    <!-- GAME OVERLAY (With Info & Auto Close) -->
     <div id="game-overlay" class="hidden">
         <div id="game-header">
-            <span id="game-timer">00:00</span>
-            <button onclick="closeGame()" style="background:var(--danger); border:none; color:white; padding:5px 10px; border-radius:5px;">إلغاء</button>
+            <div id="game-info">
+                <span id="game-timer">00:00</span>
+                <span id="game-reward-display">...</span>
+            </div>
+            <button onclick="closeGame()" style="background:var(--danger); border:none; color:white; padding:5px 15px; border-radius:8px; font-weight:bold;">خروج</button>
         </div>
-        <!-- Using Iframe for everything to keep timer visible -->
-        <iframe id="game-frame"></iframe>
-        
-        <div id="claim-area" class="hidden" style="position:absolute; bottom:50px; width:100%; text-align:center;">
-            <button onclick="claimReward()" class="btn btn-primary" style="width:80%;">استلام المكافأة</button>
-        </div>
+        <!-- Using Iframe for everything to ensure timer stays on top -->
+        <iframe id="game-frame" style="width:100%; flex:1; border:none; background:#fff;"></iframe>
     </div>
 
-    <!-- WHEEL OVERLAY -->
+    <!-- WHEEL -->
     <div id="wheel-overlay" class="hidden">
         <h2 style="color:white; margin-bottom:20px;">جرب حظك!</h2>
-        <div style="position:relative;">
-            <div class="wheel-pointer"></div>
-            <div class="wheel-container" id="wheel">
-                <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:conic-gradient(#ff0055 0deg 90deg, #0088ff 90deg 180deg, #ffaa00 180deg 270deg, #00ff88 270deg 360deg);"></div>
-            </div>
-        </div>
+        <div style="position:relative;"><div class="wheel-pointer"></div><div class="wheel-container" id="wheel"><div style="position:absolute; top:0; left:0; width:100%; height:100%; background:conic-gradient(#ff0055 0deg 90deg, #0088ff 90deg 180deg, #ffaa00 180deg 270deg, #00ff88 270deg 360deg);"></div></div></div>
         <button onclick="spinWheel()" class="btn btn-primary" style="width:200px; margin-top:30px;" id="spin-btn">دوران</button>
-        <button onclick="document.getElementById('wheel-overlay').classList.add('hidden')" style="background:none; border:none; color:#aaa; margin-top:20px; text-decoration:underline;">إغلاق</button>
+        <button onclick="document.getElementById('wheel-overlay').classList.add('hidden')" style="background:none; border:none; color:#aaa; margin-top:20px;">إغلاق</button>
     </div>
 
     <nav class="bottom-nav hidden" id="navbar">
@@ -294,26 +262,12 @@
     </nav>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDYcs_MasNecH2TgY1hPnYVb5Npp2mVSeE",
-            authDomain: "fluxcash-2261d.firebaseapp.com",
-            databaseURL: "https://fluxcash-2261d-default-rtdb.firebaseio.com",
-            projectId: "fluxcash-2261d",
-            storageBucket: "fluxcash-2261d.firebasestorage.app",
-            messagingSenderId: "1019180136606",
-            appId: "1:1019180136606:web:d6a8909dc84050aed7e38f",
-            measurementId: "G-80Y3FGZT1Y"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyDYcs_MasNecH2TgY1hPnYVb5Npp2mVSeE", authDomain: "fluxcash-2261d.firebaseapp.com", databaseURL: "https://fluxcash-2261d-default-rtdb.firebaseio.com", projectId: "fluxcash-2261d", storageBucket: "fluxcash-2261d.firebasestorage.app", messagingSenderId: "1019180136606", appId: "1:1019180136606:web:d6a8909dc84050aed7e38f", measurementId: "G-80Y3FGZT1Y" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
 
-        let currentUser = null;
-        let userData = {};
-        let settings = {};
-        let isLogin = true;
-        let activeTask = null;
-        let timerInt = null;
+        let currentUser = null, userData = {}, settings = {}, activeTask = null, timerInt = null;
 
         auth.onAuthStateChanged(u => {
             if(u) {
@@ -322,207 +276,174 @@
                 document.getElementById('app').classList.remove('hidden');
                 document.getElementById('navbar').classList.remove('hidden');
                 initApp();
-            } else {
-                document.getElementById('auth').classList.remove('hidden');
-            }
+            } else document.getElementById('auth').classList.remove('hidden');
         });
 
-        function toggleAuth() {
-            isLogin = !isLogin;
-            document.getElementById('reg-name').classList.toggle('hidden', isLogin);
-            document.getElementById('auth-btn').textContent = isLogin ? "دخول" : "تسجيل";
-        }
+        function toggleAuth() { document.getElementById('reg-name').classList.toggle('hidden'); }
         function handleAuth() {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('pass').value;
-            const n = document.getElementById('reg-name').value;
-            if(isLogin) {
-                auth.signInWithEmailAndPassword(e, p).catch(alert);
-            } else {
-                if(!n) return alert("الاسم مطلوب");
+            let e = document.getElementById('email').value, p = document.getElementById('pass').value, n = document.getElementById('reg-name').value;
+            if(!document.getElementById('reg-name').classList.contains('hidden')) {
                 auth.createUserWithEmailAndPassword(e, p).then(c => {
-                    const refCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-                    const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${n}`;
-                    db.ref('users/'+c.user.uid).set({
-                        username:n, email:e, points:0, balance:0, 
-                        refCode: refCode, avatar: avatar, country: "🌍 Global",
-                        joined:new Date().toISOString()
-                    });
+                    db.ref('users/'+c.user.uid).set({username:n, email:e, points:0, balance:0, refCode: Math.random().toString(36).substring(2,8).toUpperCase(), joined:Date.now()});
                 }).catch(alert);
-            }
+            } else auth.signInWithEmailAndPassword(e, p).catch(alert);
         }
 
         function initApp() {
             db.ref('settings').on('value', s => {
                 settings = s.val() || {};
-                if(settings.maintenance) document.getElementById('maint-screen').classList.remove('hidden');
-                else document.getElementById('maint-screen').classList.add('hidden');
-                document.getElementById('rate-disp').textContent = settings.exchangeRate || 1000;
-                if(settings.leaderboard) {
-                    document.getElementById('leaderboard-sec').classList.remove('hidden');
-                    loadLeaderboard();
-                } else document.getElementById('leaderboard-sec').classList.add('hidden');
+                document.getElementById('maint-screen').classList.toggle('hidden', !settings.maintenance);
+                document.getElementById('rate-disp').innerText = settings.exchangeRate || 1000;
+                document.getElementById('leaderboard-sec').classList.toggle('hidden', !settings.leaderboard);
+                if(settings.leaderboard) loadLeaderboard();
+                if(settings.flashEvent?.active && !sessionStorage.getItem('flashSeen')) {
+                    document.getElementById('flash-img-src').src = settings.flashEvent.image;
+                    document.getElementById('flash-popup').classList.remove('hidden');
+                    sessionStorage.setItem('flashSeen', 'true');
+                }
             });
 
             db.ref('users/'+currentUser.uid).on('value', s => {
                 userData = s.val();
                 if(userData.isBanned) { document.getElementById('ban-screen').classList.remove('hidden'); return; }
-                else { document.getElementById('ban-screen').classList.add('hidden'); }
-
-                document.getElementById('u-name').textContent = userData.username;
+                
+                document.getElementById('u-name').innerText = userData.username;
                 let verHtml = userData.isVerified ? ' <i class="ri-checkbox-circle-fill" style="color:#1da1f2;"></i>' : '';
                 document.getElementById('p-name-2').innerHTML = userData.username + verHtml;
                 document.getElementById('p-email-2').textContent = userData.email;
                 document.getElementById('u-usd').textContent = userData.balance.toFixed(2);
                 document.getElementById('u-pts').textContent = userData.points;
-                document.getElementById('ref-code').textContent = userData.refCode || "---";
-                document.getElementById('u-avatar-small').src = userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username}`;
-                document.getElementById('p-avatar').src = userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username}`;
+                document.getElementById('ref-code').innerText = userData.refCode;
+                let av = userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username}`;
+                document.getElementById('u-avatar-small').src = av;
+                document.getElementById('p-avatar').src = av;
                 if(userData.isVerified) document.getElementById('ver-badge').innerHTML = '<i class="ri-checkbox-circle-fill" style="color:#1da1f2"></i>';
                 updateLevel(userData.points);
             });
 
-            db.ref('system_alerts').limitToLast(1).on('child_added', s => {
-                const a = s.val();
-                if(Date.now() - a.timestamp < 10000) { 
-                    const div = document.createElement('div');
-                    div.className = `broadcast-msg bc-${a.position}`;
-                    div.style.borderColor = a.type === 'warning' ? 'yellow' : (a.type==='success'?'green':'#0088ff');
-                    div.innerText = a.message;
-                    document.body.appendChild(div);
-                    setTimeout(() => div.remove(), (a.duration || 5) * 1000);
-                }
+            db.ref('withdrawals').orderByChild('userId').equalTo(currentUser.uid).on('value', s => {
+                let h=''; s.forEach(c => {
+                    let w=c.val(), st=w.status;
+                    let col = st==='approved'?'var(--primary)':(st==='rejected'?'red':'orange');
+                    h+=`<div class="glass-card" style="padding:10px; font-size:0.8rem;"><div style="display:flex;justify-content:space-between;"><span>${w.method}</span><b>$${w.amount}</b></div><div style="color:${col}">${st}</div></div>`;
+                });
+                document.getElementById('w-history').innerHTML = h;
             });
 
             db.ref('payment_methods').on('value', s => {
-                const sel = document.getElementById('w-method');
-                sel.innerHTML = '';
-                s.forEach(c => sel.innerHTML += `<option value="${c.val().name}">${c.val().name}</option>`);
+                let h=''; s.forEach(c => h+=`<option value="${c.val().name}">${c.val().name}</option>`);
+                document.getElementById('w-method').innerHTML = h;
             });
 
-            db.ref('withdrawals').orderByChild('userId').equalTo(currentUser.uid).on('value', s => {
-                const d = document.getElementById('w-history');
-                d.innerHTML = '';
-                s.forEach(c => {
-                    let w = c.val();
-                    d.innerHTML += `<div class="glass-card" style="padding:10px; font-size:0.8rem;">
-                        <div style="display:flex; justify-content:space-between;"><span>${w.method}</span><b>$${w.amount}</b></div>
-                        <div style="color:${w.status==='pending'?'orange':(w.status==='approved'?'var(--primary)':'red')}">${w.status}</div>
-                    </div>`;
-                });
+            db.ref('system_alerts').limitToLast(1).on('child_added', s => {
+                let a = s.val();
+                if(Date.now()-a.timestamp < 10000) showToast(a.message);
             });
 
             loadChat();
         }
 
-        // --- FIXED: startGame Logic ---
+        // --- FIXED GAME LOGIC ---
         function openTasks(cat) {
             nav('tasks');
             const list = document.getElementById('tasks-list');
             list.innerHTML = '<p style="text-align:center; color:#aaa;">جاري جلب البيانات...</p>';
             db.ref('tasks').orderByChild('category').equalTo(cat).once('value', s => {
                 list.innerHTML = '';
-                if(s.numChildren() === 0) { list.innerHTML = '<p style="text-align:center;">لا توجد عناصر حالياً</p>'; return; }
+                if(s.numChildren() === 0) { list.innerHTML = '<p style="text-align:center;">لا توجد مهام</p>'; return; }
                 s.forEach(c => {
-                    let t = c.val();
-                    list.innerHTML += `
-                    <div class="task-item">
-                        <div><div style="font-weight:bold;">${t.title}</div><div style="font-size:0.8rem; color:#aaa;">⏱ ${t.time}s</div></div>
-                        <div><span style="color:var(--primary); font-weight:bold; margin-left:10px;">+${t.points}</span><button onclick="startGame('${c.key}', '${t.type}', '${t.content}', ${t.time}, ${t.points})" class="task-btn">ابدأ</button></div>
-                    </div>`;
+                    let t=c.val();
+                    list.innerHTML += `<div class="task-item"><div><b>${t.title}</b><br><small>${t.time}s</small></div><button onclick="startGame('${c.key}','${t.type}','${t.content}',${t.time},${t.points})" class="task-btn">+${t.points}</button></div>`;
                 });
             });
         }
 
         function startGame(id, type, content, time, points) {
-            activeTask = { id, points };
+            activeTask = { pts: points };
             document.getElementById('game-overlay').classList.remove('hidden');
-            document.getElementById('claim-area').classList.add('hidden');
             
-            // KEY FIX: Always use the iframe so the timer remains visible.
+            // Show Reward Amount in Header
+            document.getElementById('game-reward-display').innerText = `ستربح: ${points} نقطة`;
+
             const frame = document.getElementById('game-frame');
-            frame.style.display = 'block';
-            
             if(type === 'html') {
                 frame.contentWindow.document.open();
                 frame.contentWindow.document.write(content);
                 frame.contentWindow.document.close();
             } else {
-                // It's a link. Load it in the iframe.
-                // Note: Some websites refuse to load in iframes (X-Frame-Options).
-                // If it fails, the user will still see the timer running.
+                // IMPORTANT: For links to show timer, we use iframe. 
+                // Note: Some sites block iframes.
                 frame.src = content; 
             }
 
-            let left = time;
-            document.getElementById('game-timer').textContent = left;
+            let t = time;
+            document.getElementById('game-timer').innerText = formatTime(t);
+            
             if(timerInt) clearInterval(timerInt);
             timerInt = setInterval(() => {
-                left--;
-                document.getElementById('game-timer').textContent = left;
-                if(left <= 0) {
+                t--;
+                document.getElementById('game-timer').innerText = formatTime(t);
+                if(t <= 0) {
                     clearInterval(timerInt);
-                    document.getElementById('game-timer').textContent = "مكتمل!";
-                    document.getElementById('claim-area').classList.remove('hidden');
+                    // AUTO CLAIM
+                    let finalPts = settings.happyHour ? points * 2 : points;
+                    db.ref('users/'+currentUser.uid).update({points: (userData.points||0) + finalPts});
+                    closeGame();
+                    showToast(`مبروك! ربحت ${finalPts} نقطة`);
                 }
             }, 1000);
         }
 
-        function claimReward() {
-            if(activeTask) {
-                let finalPts = settings.happyHour ? activeTask.points * 2 : activeTask.points;
-                db.ref('users/'+currentUser.uid).update({points: (userData.points||0)+finalPts});
-                showToast(`+${finalPts} نقطة`);
-                closeGame();
-            }
-        }
         function closeGame() {
             document.getElementById('game-overlay').classList.add('hidden');
             document.getElementById('game-frame').src = 'about:blank';
-            if(timerInt) clearInterval(timerInt);
-            activeTask = null;
+            clearInterval(timerInt);
         }
 
-        // Other Functions
-        function updateLevel(pts) {
-            let level = "مبتدئ", next = 1000, percent = 0;
-            if(pts < 1000) { level="مبتدئ"; next=1000; percent=(pts/1000)*100; }
-            else if(pts < 5000) { level="محترف"; next=5000; percent=((pts-1000)/4000)*100; }
-            else if(pts < 20000) { level="خبير"; next=20000; percent=((pts-5000)/15000)*100; }
-            else { level="أسطورة"; next="Max"; percent=100; }
-            document.getElementById('lvl-name').textContent = level;
-            document.getElementById('lvl-next').textContent = next === "Max" ? "MAX LEVEL" : `التالي: ${next}`;
-            document.getElementById('lvl-bar').style.width = percent + "%";
+        function formatTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
+
+        function dailyBonus() {
+            let now = Date.now();
+            let last = userData.lastDaily || 0;
+            let cooldown = (settings.dailyCooldown || 24) * 3600000;
+            if(now - last < cooldown) return showToast("عد لاحقاً");
+            let pts = settings.dailyBonus || 50;
+            db.ref('users/'+currentUser.uid).update({points: userData.points+pts, lastDaily: now});
+            showToast(`+${pts} نقطة`);
         }
-        function loadLeaderboard() {
-            db.ref('users').orderByChild('points').limitToLast(5).once('value', s => {
-                let h = '', arr = [];
-                s.forEach(c => arr.push(c.val()));
-                arr.reverse().forEach((u, i) => h += `<div class="leader-item"><span>#${i+1} ${u.username}</span><span>${u.points} pts</span></div>`);
-                document.getElementById('leader-list').innerHTML = h;
-            });
-        }
-        function openWheel() { document.getElementById('wheel-overlay').classList.remove('hidden'); }
+
         function spinWheel() {
+            let limit = settings.wheelLimit || 3;
+            let today = new Date().toDateString();
+            if(userData.lastWheelDate !== today) userData.spinsToday = 0;
+            if((userData.spinsToday||0) >= limit) return showToast("انتهت المحاولات");
+
             const btn = document.getElementById('spin-btn'); btn.disabled = true;
             document.getElementById('wheel').style.transform = `rotate(${Math.floor(1000 + Math.random() * 3000)}deg)`;
             setTimeout(() => {
-                const prizes = (settings.wheelPrizes || "10,20,50,0,100").split(',');
-                const prize = parseInt(prizes[Math.floor(Math.random()*prizes.length)]);
-                db.ref('users/'+currentUser.uid).update({points: (userData.points||0)+prize});
-                showToast(`مبروك! ربحت ${prize} نقطة`);
+                let prizes = (settings.wheelPrizes || "10,20,50,0,100").split(',').map(Number);
+                let win = prizes[Math.floor(Math.random() * prizes.length)];
+                db.ref('users/'+currentUser.uid).update({
+                    points: userData.points + win,
+                    spinsToday: (userData.spinsToday||0) + 1,
+                    lastWheelDate: today
+                });
+                showToast(`ربحت ${win} نقطة`);
                 btn.disabled = false;
-                setTimeout(() => document.getElementById('wheel-overlay').classList.add('hidden'), 2000);
-            }, 5000);
+                document.getElementById('wheel-overlay').classList.add('hidden');
+            }, 4000);
         }
+        function openWheel() { document.getElementById('wheel-overlay').classList.remove('hidden'); }
+
+        let tid=null;
         function loadChat() {
             db.ref('support_tickets').orderByChild('userId').equalTo(currentUser.uid).on('value', s => {
-                const b = document.getElementById('chat-box'); b.innerHTML = '';
+                let b = document.getElementById('chat-box'); b.innerHTML='';
                 s.forEach(c => {
                     if(c.val().status === 'open') {
-                        ticketId = c.key;
-                        const msgs = c.val().messages || {};
-                        Object.values(msgs).forEach(m => b.innerHTML += `<div class="msg ${m.sender==='user'?'msg-me':'msg-admin'}">${m.text}</div>`);
+                        tid = c.key;
+                        let m = c.val().messages||{};
+                        Object.values(m).forEach(x=>b.innerHTML+=`<div class="msg ${x.sender==='user'?'msg-me':'msg-admin'}">${x.text}</div>`);
                         b.scrollTop = b.scrollHeight;
                     }
                 });
@@ -530,30 +451,19 @@
         }
         function sendMsg() {
             const v = document.getElementById('chat-input').value; if(!v) return;
-            if(!ticketId) db.ref('support_tickets').push({userId:currentUser.uid, username:userData.username, status:'open', lastMsg:v}).then(r=>{ticketId=r.key; pm(v);});
+            if(!tid) db.ref('support_tickets').push({userId:currentUser.uid, username:userData.username, status:'open', lastMsg:v}).then(r=>{tid=r.key; pm(v);});
             else pm(v);
-            document.getElementById('chat-input').value = '';
+            document.getElementById('chat-input').value='';
         }
-        function pm(t) { db.ref('support_tickets/'+ticketId+'/messages').push({text:t, sender:'user'}); }
-        function nav(p) { document.querySelectorAll('section').forEach(s => s.classList.add('hidden')); document.getElementById(p+'-page').classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); }
-        function dailyBonus() { let pts = settings.dailyBonus || 50; db.ref('users/'+currentUser.uid).update({points: (userData.points||0)+pts}); showToast(`مكافأة يومية +${pts}`); }
-        function convert() {
-            let rate = settings.exchangeRate || 1000;
-            if(userData.points < rate) return showToast(`تحتاج ${rate} نقطة`);
-            db.ref('users/'+currentUser.uid).update({points: userData.points-rate, balance: userData.balance+1});
-            showToast("تم التحويل");
-        }
-        function withdraw() {
-            const a = parseFloat(document.getElementById('w-amount').value);
-            const m = document.getElementById('w-method').value;
-            const ad = document.getElementById('w-addr').value;
-            if(a > userData.balance) return showToast("رصيد غير كاف");
-            db.ref('users/'+currentUser.uid).update({balance: userData.balance-a});
-            db.ref('withdrawals').push({userId:currentUser.uid, username:userData.username, amount:a, method:m, address:ad, status:'pending'});
-            showToast("تم الطلب");
-        }
+        function pm(t) { db.ref('support_tickets/'+tid+'/messages').push({text:t, sender:'user'}); }
+
+        function nav(p) { document.querySelectorAll('section').forEach(s=>s.classList.add('hidden')); document.getElementById(p+'-page').classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); }
+        function updateLevel(p) { let l="مبتدئ", w=0; if(p>1000){l="محترف"; w=30;} if(p>5000){l="خبير"; w=60;} if(p>20000){l="أسطورة"; w=100;} document.getElementById('lvl-name').innerText=l; document.getElementById('lvl-bar').style.width=w+'%'; }
+        function loadLeaderboard() { db.ref('users').orderByChild('points').limitToLast(5).once('value', s=>{ let h=''; let a=[]; s.forEach(c=>a.push(c.val())); a.reverse().forEach((u,i)=>h+=`<div class="leader-item">#${i+1} ${u.username} (${u.points})</div>`); document.getElementById('leader-list').innerHTML=h; }); }
+        function convert() { let r = settings.exchangeRate || 1000; if(userData.points < r) return showToast(`تحتاج ${r}`); db.ref('users/'+currentUser.uid).update({points: userData.points-r, balance: userData.balance+1}); showToast("تم التحويل"); }
+        function withdraw() { let a = parseFloat(document.getElementById('w-amount').value); if(a > userData.balance) return showToast("رصيد غير كاف"); db.ref('withdrawals').push({userId:currentUser.uid, amount:a, method:document.getElementById('w-method').value, address:document.getElementById('w-addr').value, status:'pending'}); db.ref('users/'+currentUser.uid).update({balance: userData.balance-a}); showToast("تم الطلب"); }
         function copyRef() { navigator.clipboard.writeText(userData.refCode); showToast("تم النسخ"); }
-        function showToast(m) { const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
+        function showToast(m) { let t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
     </script>
 </body>
 </html>
